@@ -1,0 +1,6 @@
+#!/bin/bash
+
+feh --bg-scale ~/Pictures/my_wallpapers/spirit.png &
+xset -b &
+LC_ALL=C parcellite &
+dunst &
