@@ -133,9 +133,9 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 bindsym Control+$mod+l exec --no-startup-id "~/scripts/i3lock.sh"
 bindsym XF86MonBrightnessDown exec --no-startup-id "xbacklight -dec 5"
 bindsym XF86MonBrightnessUp exec --no-startup-id "xbacklight -inc 5"
- #kebyboard LED  brightness
-bindsym XF86KbdBrightnessDown exec --no-startup-id "cd /sys/class/leds/smc::kbd_backlight; cur=$(cat brightness); cur=$((cur-5)); if [ $cur -lt 0 ]; then cur=0; fi; echo $cur | sudo tee brightness "
-bindsym XF86KbdBrightnessUp   exec --no-startup-id "cd /sys/class/leds/smc::kbd_backlight; cur=$(cat brightness); cur=$((cur+5)); if [ $cur -gt 255 ]; then cur=255; fi; echo $cur | sudo tee brightness "
+# kebyboard LED  brightness
+bindsym XF86KbdBrightnessDown exec --no-startup-id "cd /sys/class/leds/smc::kbd_backlight; cur=$(cat brightness); cur=$((cur-10)); if [ $cur -lt 0 ]; then cur=0; fi; echo $cur | tee brightness "
+bindsym XF86KbdBrightnessUp   exec --no-startup-id "cd /sys/class/leds/smc::kbd_backlight; cur=$(cat brightness); cur=$((cur+10)); if [ $cur -gt 255 ]; then cur=255; fi; echo $cur | tee brightness "
 set $sink alsa_output.pci-0000_00_1b.0.analog-stereo
 bindsym XF86AudioRaiseVolume exec --no-startup-id "pactl set-sink-mute $sink 0; pactl set-sink-volume $sink +2% "
 bindsym XF86AudioLowerVolume exec --no-startup-id "pactl set-sink-mute $sink 0; pactl set-sink-volume $sink -- -2% "
@@ -172,6 +172,7 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
+	font pango:Monospace 12, FontAwesome 12
 	colors {
 		# Whole color settings
 		background #000000
