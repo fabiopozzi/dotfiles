@@ -130,6 +130,9 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # my custom settings
+bindsym $mod+Shift+B exec i3-input -F 'exec /usr/bin/xbacklight -set %s' -P 'Set brightness to: '
+bindsym Mod1+Shift+K exec i3-input -F 'exec setxkbmap %s' -P 'Set keyboard layout to: '
+
 bindsym Control+$mod+l exec --no-startup-id "~/scripts/i3lock.sh"
 bindsym XF86MonBrightnessDown exec --no-startup-id "xbacklight -dec 5"
 bindsym XF86MonBrightnessUp exec --no-startup-id "xbacklight -inc 5"
