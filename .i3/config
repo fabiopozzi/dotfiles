@@ -189,6 +189,7 @@ bar {
 		urgent_workspace   #aa0000 #990000 #ffffff
 	}
 	position top
+	strip_workspace_numbers yes
         status_command py3status -c ~/.i3/i3status.conf
 }
 
