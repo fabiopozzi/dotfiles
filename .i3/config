@@ -92,11 +92,11 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
-set $tag1 " "
-set $tag2 ""
-set $tag3 ""
-set $tag4 ""
-set $tag5 ""
+set $tag1 "1: "
+set $tag2 "2:"
+set $tag3 "3:"
+set $tag4 "4:"
+set $tag5 "5:"
 
 # switch to workspace
 bindsym $mod+1 workspace $tag1
