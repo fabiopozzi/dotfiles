@@ -4,3 +4,4 @@ feh --bg-scale ~/Pictures/my_wallpapers/shape.png &
 xset -b &
 LC_ALL=C parcellite &
 dunst &
+setxkbmap -option caps:escape
