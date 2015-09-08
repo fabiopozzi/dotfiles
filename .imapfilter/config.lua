@@ -23,7 +23,8 @@ function main()
 end
 
 function move_mailing_lists(account, mails)
-	move_if_to_contains(account, mails, "misc@openbsd.org", "INBOX.misc_openbsd")
+	move_if_to_or_cc_contains(account, mails, "misc@openbsd.org", "INBOX.misc_openbsd")
+	move_if_to_or_cc_contains(account, mails, "tech@openbsd.org", "INBOX.tech_openbsd")
 end
 
 function move_if_subject_contains(account, mails, subject, mailbox)
@@ -31,8 +32,10 @@ function move_if_subject_contains(account, mails, subject, mailbox)
 	filtered:move_messages(account[mailbox]);
 end
 
-function move_if_to_contains(account, mails, to, mailbox)
+function move_if_to_or_cc_contains(account, mails, to, mailbox)
 	filtered = mails:contain_to(to)
+	filtered:move_messages(account[mailbox]);
+	filtered = mails:contain_cc(to)
 	filtered:move_messages(account[mailbox]);
 end
 
