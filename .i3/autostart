@@ -6,3 +6,4 @@ LC_ALL=C parcellite &
 dunst &
 setxkbmap -option caps:escape
 syndaemon -k -K -d -i 0.2 -R &
+udiskie --tray & > /dev/null
