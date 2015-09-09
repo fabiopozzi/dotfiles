@@ -1,6 +1,6 @@
 [general]
 # List of accounts to be synced, separated by a comma.
-accounts = antani
+accounts = antani,antani-fabio
 
 [Account antani]
 # Identifier for the local repository; e.g. the maildir to be synced via IMAP.
@@ -10,17 +10,37 @@ remoterepository = main-remote
 # Status cache. Default is plain, which eventually becomes huge and slow.
 status_backend = sqlite
 
+[Account antani-fabio]
+# Identifier for the local repository; e.g. the maildir to be synced via IMAP.
+localrepository = fabio-local
+# Identifier for the remote repository; i.e. the actual IMAP, usually non-local.
+remoterepository = fabio-remote
+# Status cache. Default is plain, which eventually becomes huge and slow.
+status_backend = sqlite
+
 [Repository main-local]
 # Currently, offlineimap only supports maildir and IMAP for local repositories.
 type = Maildir
 # Where should the mail be placed?
 localfolders = ~/Mail
 
+[Repository fabio-local]
+# Currently, offlineimap only supports maildir and IMAP for local repositories.
+type = Maildir
+# Where should the mail be placed?
+localfolders = ~/Mail_fabio
+
 [Repository main-remote]
 # Remote repos can be IMAP or Gmail, the latter being a preconfigured IMAP.
 type = IMAP
 remotehost = foo.antani.work
 remoteuser = wintermute
+
+[Repository fabio-remote]
+# Remote repos can be IMAP or Gmail, the latter being a preconfigured IMAP.
+type = IMAP
+remotehost = foo.antani.work
+remoteuser = fabio
 
 [mbnames]
 enabled = yes
