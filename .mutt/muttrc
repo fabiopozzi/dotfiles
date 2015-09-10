@@ -14,3 +14,8 @@ bind index \CO sidebar-open
 bind pager \CP sidebar-prev
 bind pager \CN sidebar-next
 bind pager \CO sidebar-open
+
+# set up the sidebar, default not visible
+set sidebar_width=30
+set sidebar_delim='|'
+set sidebar_sort=yes
