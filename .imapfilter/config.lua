@@ -25,6 +25,9 @@ end
 function move_mailing_lists(account, mails)
 	move_if_to_or_cc_contains(account, mails, "misc@openbsd.org", "INBOX.misc_openbsd")
 	move_if_to_or_cc_contains(account, mails, "tech@openbsd.org", "INBOX.tech_openbsd")
+	move_if_from_contains(account, mails, "I think about beer", "INBOX.beer")
+	move_if_from_contains(account, mails, "Belgian Smaak", "INBOX.beer")
+	move_if_from_contains(account, mails, "newsletter@aeon.co", "INBOX.aeon")
 end
 
 function move_if_subject_contains(account, mails, subject, mailbox)
