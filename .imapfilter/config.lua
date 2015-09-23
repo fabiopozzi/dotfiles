@@ -28,6 +28,7 @@ function move_mailing_lists(account, mails)
 	move_if_from_contains(account, mails, "I think about beer", "INBOX.beer")
 	move_if_from_contains(account, mails, "Belgian Smaak", "INBOX.beer")
 	move_if_from_contains(account, mails, "newsletter@aeon.co", "INBOX.aeon")
+	move_if_from_contains(account, mails, "root@foo.antani.work", "INBOX.mailserver")
 end
 
 function move_if_subject_contains(account, mails, subject, mailbox)
