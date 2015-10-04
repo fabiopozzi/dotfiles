@@ -36,6 +36,7 @@ alias la='ls -lah'
 alias cat='cat -v'
 alias less='less -R'
 alias vim='gvim'
+alias gst='git status'
 
 export PATH=$PATH:/home/fabio/go/bin:/home/fabio/bin
 export GOPATH=$HOME/go
