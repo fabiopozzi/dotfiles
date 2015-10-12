@@ -37,9 +37,9 @@ alias cat='cat -v'
 alias less='less -R'
 alias vim='gvim'
 alias gst='git status'
+alias picorun='sudo picocom -b 115200 /dev/ttyUSB0'
 
-export PATH=$PATH:/home/fabio/go/bin:/home/fabio/bin
-export GOPATH=$HOME/go
+export PATH=$PATH:/home/fabio/bin
 TERM="gnome-256color"
 # autologin
 [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx
