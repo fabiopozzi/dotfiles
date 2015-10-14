@@ -1,0 +1,18 @@
+set folder = "~/archivio_posta"
+set mbox=+mbox
+set spoolfile = "+archivio"
+set record =+sent
+set postponed = +drafts
+mailboxes "" "+archivio" "+bglug" "+edis" "+eprivacy" "+fellows" "+gl-como" "+ml" "+personale" "+poul" "+tingavert" "+Trash" "+inbox"
+
+bind index \CP sidebar-prev
+bind index \CN sidebar-next
+bind index \CO sidebar-open
+bind pager \CP sidebar-prev
+bind pager \CN sidebar-next
+bind pager \CO sidebar-open
+
+# set up the sidebar, default not visible
+set sidebar_width=30
+set sidebar_delim='|'
+set sidebar_sort=yes
