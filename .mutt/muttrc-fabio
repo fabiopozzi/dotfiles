@@ -1,5 +1,8 @@
 # IMAP: offlineimap
 set folder = "~/Mail_fabio"
+set from="Fabio <fabio@antani.work>"
+# SMTP setting
+set smtp_url = "smtp://fabio@foo.antani.work:587/"
 
 # source ~/.mutt/mailboxes
 source ~/.mutt/mutt-colors-solarized-dark-256.muttrc

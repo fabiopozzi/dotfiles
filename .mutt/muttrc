@@ -1,5 +1,8 @@
 # IMAP: offlineimap
 set folder = "~/Mail"
+set from="wintermute <wintermute@antani.work>"
+# SMTP setting
+set smtp_url = "smtp://wintermute@foo.antani.work:587/"
 
 source ~/.mutt/mailboxes
 source ~/.mutt/mutt-colors-solarized-dark-256.muttrc
