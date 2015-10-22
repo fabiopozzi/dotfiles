@@ -37,7 +37,9 @@ alias cat='cat -v'
 alias less='less -R'
 alias vim='gvim'
 alias gst='git status'
+alias svs='svn status'
 alias picorun='sudo picocom -b 115200 /dev/ttyUSB0'
+alias nssh='ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=/dev/null"'
 
 export PATH=$PATH:/home/fabio/bin
 TERM="gnome-256color"
