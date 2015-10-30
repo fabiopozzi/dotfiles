@@ -15,6 +15,7 @@ promptinit
 prompt walters
 
 setopt HIST_IGNORE_DUPS
+setopt INC_APPEND_HISTORY
 
 # colored GCC warnings and errors
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
@@ -40,6 +41,8 @@ alias gst='git status'
 alias svs='svn status'
 alias picorun='sudo picocom -b 115200 /dev/ttyUSB0'
 alias nssh='ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=/dev/null"'
+alias nscp='scp -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=/dev/null"'
+alias pmutt='mutt -F .mutt/muttrc-local'
 
 export PATH=$PATH:/home/fabio/bin
 TERM="gnome-256color"
