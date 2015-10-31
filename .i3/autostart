@@ -1,6 +1,6 @@
 #!/bin/bash
 
-feh --bg-scale ~/Pictures/my_wallpapers/shape.png &
+feh --bg-scale ~/Pictures/everest.jpg &
 xset -b &
 xrdb ~/.Xresources &
 LC_ALL=C parcellite &
