@@ -188,7 +188,8 @@ bar {
 	}
 	position top
 	strip_workspace_numbers yes
-        status_command py3status -c ~/.i3/i3status.conf
+	status_command py3status -c ~/.i3/i3status.conf
+	tray_output eDP1
 }
 
 exec_always --no-startup-id ~/.i3/autostart
