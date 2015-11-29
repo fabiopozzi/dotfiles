@@ -1,15 +1,14 @@
 function main()
 	local account = IMAP {
-		server = 'foo.antani.work',
+		server = 'mail.antani.work',
 		username = 'wintermute',
-		password = get_imap_password(".offlineimap_pass"),
 		ssl = 'tls1',
 	}
 
 	-- Make sure the account is configured properly
 	account.INBOX:check_status()
-	account['INBOX.misc_openbsd']:check_status()
-	account['INBOX.tech_openbsd']:check_status()
+	account['misc_openbsd']:check_status()
+	account['tech_openbsd']:check_status()
 
 
 	-- Get all mail from INBOX
@@ -23,12 +22,12 @@ function main()
 end
 
 function move_mailing_lists(account, mails)
-	move_if_to_or_cc_contains(account, mails, "misc@openbsd.org", "INBOX.misc_openbsd")
-	move_if_to_or_cc_contains(account, mails, "tech@openbsd.org", "INBOX.tech_openbsd")
-	move_if_from_contains(account, mails, "I think about beer", "INBOX.beer")
-	move_if_from_contains(account, mails, "Belgian Smaak", "INBOX.beer")
-	move_if_from_contains(account, mails, "newsletter@aeon.co", "INBOX.aeon")
-	move_if_from_contains(account, mails, "root@foo.antani.work", "INBOX.mailserver")
+	move_if_to_or_cc_contains(account, mails, "misc@openbsd.org", "misc_openbsd")
+	move_if_to_or_cc_contains(account, mails, "tech@openbsd.org", "tech_openbsd")
+	move_if_from_contains(account, mails, "I think about beer", "beer")
+	move_if_from_contains(account, mails, "Belgian Smaak", "beer")
+	move_if_from_contains(account, mails, "newsletter@aeon.co", "aeon")
+	move_if_from_contains(account, mails, "root@mail.antani.work", "mailserver")
 end
 
 function move_if_subject_contains(account, mails, subject, mailbox)
