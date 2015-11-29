@@ -1,7 +1,7 @@
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=10000
+SAVEHIST=10000
 setopt appendhistory autocd extendedglob
 bindkey -e
 # End of lines configured by zsh-newuser-install
@@ -14,7 +14,12 @@ promptinit
 # End of lines added by compinstall
 prompt walters
 
-setopt HIST_IGNORE_DUPS
+# if a new command line added duplicates an old one, the older
+# command is removed
+setopt HIST_IGNORE_ALL_DUPS
+# when writing the history file, older duplicates are omitted
+setopt HIST_SAVE_NO_DUPS
+
 setopt INC_APPEND_HISTORY
 
 # colored GCC warnings and errors
@@ -44,7 +49,11 @@ alias nssh='ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=/dev/null"'
 alias nscp='scp -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=/dev/null"'
 alias pmutt='mutt -F .mutt/muttrc-local'
 
-export PATH=$PATH:/home/fabio/bin
+export PATH=$PATH:/home/fabio/bin:/home/fabio/node/bin
+export WORKON_HOME=~/src/virtualenvs
+source /usr/local/bin/virtualenvwrapper.sh
 TERM="gnome-256color"
 # autologin
 [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx
+# Hook for desk activation
+[ -n "$DESK_ENV" ] && source "$DESK_ENV"
