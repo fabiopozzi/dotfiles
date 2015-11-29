@@ -1,13 +1,14 @@
-# IMAP: offlineimap
-set folder = "~/Mail"
+# IMAP: mbsync
+set folder = "~/.mail/antani"
 set from="wintermute <wintermute@antani.work>"
 # SMTP setting
-set smtp_url = "smtp://wintermute@foo.antani.work:587/"
+set smtp_url = "smtp://wintermute@mail.antani.work:587/"
 
-source ~/.mutt/mailboxes
+#source ~/.mutt/mailboxes
+mailboxes "+Drafts" "+Inbox" "+aeon" "+birra" "+linux_counter_project" "+mailserver" "+minecraft" "+misc_openbsd" "+personale" "+tech_openbsd" "+Junk" "+Sent" "+Trash" "+Drafts"
 source ~/.mutt/mutt-colors-solarized-dark-256.muttrc
 
-set spoolfile = "+INBOX"
+set spoolfile = "+Inbox"
 set record = "+Sent\ Items"
 set postponed = "+Drafts"
 
