@@ -7,8 +7,9 @@ function main()
 
 	-- Make sure the account is configured properly
 	account.INBOX:check_status()
-	account['misc_openbsd']:check_status()
-	account['tech_openbsd']:check_status()
+	account['montagna']:check_status()
+	account['birra']:check_status()
+	account['mailserver']:check_status()
 
 
 	-- Get all mail from INBOX
@@ -22,10 +23,9 @@ function main()
 end
 
 function move_mailing_lists(account, mails)
-	move_if_to_or_cc_contains(account, mails, "misc@openbsd.org", "misc_openbsd")
-	move_if_to_or_cc_contains(account, mails, "tech@openbsd.org", "tech_openbsd")
-	move_if_from_contains(account, mails, "I think about beer", "beer")
-	move_if_from_contains(account, mails, "Belgian Smaak", "beer")
+	move_if_to_or_cc_contains(account, mails, "info@cristianriva.it", "montagna")
+	move_if_from_contains(account, mails, "I think about beer", "birra")
+	move_if_from_contains(account, mails, "Belgian Smaak", "birra")
 	move_if_from_contains(account, mails, "newsletter@aeon.co", "aeon")
 	move_if_from_contains(account, mails, "root@mail.antani.work", "mailserver")
 end
