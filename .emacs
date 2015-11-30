@@ -5,3 +5,11 @@
 
 (setq org-agenda-files (list "~/Documents/personale/org/work.org"
                              "~/Documents/personale/org/casa.org"))
+
+;; setup c indentation
+(setq-default c-basic-offset 4
+	      tab-width 4
+	      indent-tabs-mode t)
+
+;; display whitespace
+(global-whitespace-mode 1)
