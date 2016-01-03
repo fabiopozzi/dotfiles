@@ -21,3 +21,4 @@ localfolders = ~/Maildir
 type = IMAP
 remotehost = mail.antani.work
 remoteuser = wintermute
+cert_fingerprint=81c90d733883a03f85200c5c21565300f1e1ba85
