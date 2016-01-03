@@ -49,7 +49,7 @@ alias nssh='ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=/dev/null"'
 alias nscp='scp -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=/dev/null"'
 alias pmutt='mutt -F .mutt/muttrc-local'
 
-export PATH=$PATH:/home/fabio/bin:/home/fabio/node/bin
+export PATH=$PATH:/home/fabio/bin
 export WORKON_HOME=~/src/virtualenvs
 source /usr/local/bin/virtualenvwrapper.sh
 TERM="gnome-256color"
