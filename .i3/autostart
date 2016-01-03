@@ -1,6 +1,6 @@
 #!/bin/bash
 
-feh --bg-scale ~/Pictures/everest.jpg &
+feh --randomize --bg-max ~/Pictures/sfondi/* &
 xset -b &
 xrdb ~/.Xresources &
 LC_ALL=C parcellite &
