@@ -19,6 +19,6 @@ localfolders = ~/Maildir
 [Repository main-remote]
 # Remote repos can be IMAP or Gmail, the latter being a preconfigured IMAP.
 type = IMAP
-remotehost = mail.antani.work
+remotehost = antani.work
 remoteuser = wintermute
-cert_fingerprint=81c90d733883a03f85200c5c21565300f1e1ba85
+cert_fingerprint=80c97feb5fa12cc96ce5cb4f7165eecde9fa77ab

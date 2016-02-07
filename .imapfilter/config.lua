@@ -1,6 +1,6 @@
 function main()
 	local account = IMAP {
-		server = 'mail.antani.work',
+		server = 'antani.work',
 		username = 'wintermute',
 		ssl = 'tls1',
 	}

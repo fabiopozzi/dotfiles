@@ -2,7 +2,7 @@
 set folder = "~/Maildir"
 set from="Fabio <wintermute@antani.work>"
 # SMTP setting
-set smtp_url = "smtp://wintermute@mail.antani.work:587/"
+set smtp_url = "smtp://wintermute@antani.work:587/"
 
 #source ~/.mutt/mailboxes
 mailboxes "+Drafts" "+INBOX" "+birra" "+mailserver" "+montagna" "+personale" "+python" "+Junk" "+Sent" "+Trash" "+Drafts"
