@@ -1,9 +1,9 @@
 set folder = "~/archivio_posta"
 set mbox=+mbox
-set spoolfile = "+archivio"
+set spoolfile = "+inbox"
 set record =+sent
 set postponed = +drafts
-mailboxes "" "+archivio" "+bglug" "+edis" "+eprivacy" "+fellows" "+gl-como" "+ml" "+personale" "+poul" "+tingavert" "+Trash" "+inbox"
+mailboxes "" "+archivio" "+edis" "+eprivacy" "+fellows" "+gl-como" "+ml" "+personale" "+poul" "+tingavert" "+Trash" "+inbox"
 
 bind index \CP sidebar-prev
 bind index \CN sidebar-next
