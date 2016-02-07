@@ -20,6 +20,7 @@
 ;; display whitespace
 (global-whitespace-mode 1)
 
+(set-default-font "inconsolata-18")
 ;; add custom themes path and load gruvbox theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (load-theme 'gruvbox t)
