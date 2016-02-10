@@ -26,7 +26,7 @@ function move_mailing_lists(account, mails)
 	move_if_to_or_cc_contains(account, mails, "info@cristianriva.it", "montagna")
 	move_if_from_contains(account, mails, "I think about beer", "birra")
 	move_if_from_contains(account, mails, "Belgian Smaak", "birra")
-	move_if_from_contains(account, mails, "root@antani.antani.work", "mailserver")
+	move_if_from_contains(account, mails, "root@antani.work", "mailserver")
 end
 
 function move_if_subject_contains(account, mails, subject, mailbox)
