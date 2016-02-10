@@ -23,3 +23,7 @@ bind pager \CO sidebar-open
 set sidebar_width=30
 set sidebar_delim='|'
 set sidebar_sort=yes
+
+# handle other files
+set mailcap_path = ~/.mutt/mailcap
+auto_view text/html
