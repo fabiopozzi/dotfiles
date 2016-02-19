@@ -24,6 +24,9 @@ set sidebar_width=30
 set sidebar_delim='|'
 set sidebar_sort=yes
 
+macro index b '<enter-command>toggle sidebar_visible<enter>'
+macro pager b '<enter-command>toggle sidebar_visible<enter>'
+
 # handle other files
 set mailcap_path = ~/.mutt/mailcap
 auto_view text/html
