@@ -5,11 +5,11 @@ set from="Fabio <wintermute@antani.work>"
 set smtp_url = "smtp://wintermute@antani.work:587/"
 
 #source ~/.mutt/mailboxes
-mailboxes "+Drafts" "+INBOX" "+birra" "+mailserver" "+montagna" "+personale" "+python" "+Junk" "+Sent" "+Trash" "+Drafts"
+mailboxes "+Drafts" "+INBOX" "+birra" "+mailserver" "+montagna" "+personale" "+python" "+olimex" "+python" "+Junk" "+Sent" "+Trash" "+Drafts"
 source ~/.mutt/mutt-colors-solarized-dark-256.muttrc
 
 set spoolfile = "+INBOX"
-set record = "+Sent\ Items"
+set record = "+Sent"
 set postponed = "+Drafts"
 
 bind index \CP sidebar-prev
