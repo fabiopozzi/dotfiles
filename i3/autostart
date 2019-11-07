@@ -1,10 +1,10 @@
 #!/bin/bash
 
-feh --randomize --bg-max ~/Pictures/sfondi/* &
+#feh --randomize --bg-max ~/Pictures/sfondi/* &
 xset -b &
-xrdb ~/.Xresources &
-LC_ALL=C parcellite &
-dunst &
+#xrdb ~/.Xresources &
+#LC_ALL=C parcellite &
+#dunst &
 setxkbmap -option caps:escape
-udiskie --tray & > /dev/null
-nm-applet & > /dev/null
+#udiskie --tray & > /dev/null
+#nm-applet & > /dev/null
