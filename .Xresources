@@ -71,3 +71,8 @@ xterm*color12: _color12
 xterm*color13: _color13
 xterm*color14: _color14
 xterm*color15: _color15
+
+! preferred fonts: Inconsolata
+xterm*renderFont      : true
+xterm*faceSize        : 11
+xterm*faceName        : Inconsolata
