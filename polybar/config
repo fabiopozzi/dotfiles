@@ -9,6 +9,7 @@ foreground = #ccffffff
 line-color = ${bar/bottom.background}
 line-size = 16
 
+locale = it_IT.UTF-8
 spacing = 2
 padding-right = 5
 module-margin = 4
@@ -177,8 +178,8 @@ ramp-coreload-7-foreground = #ff5555
 
 [module/date]
 type = internal/date
-date =    %%{F#99}%Y-%m-%d%%{F-}  %%{F#fff}%H:%M%%{F-}
-date-alt = %%{F#fff}%A, %d %B %Y  %%{F#fff}%H:%M%%{F#666}:%%{F#fba922}%S%%{F-}
+date =  %%{F#fff}%A, %d %B %Y  %%{F#fff}%H:%M%%{F-}
+date-alt =    %%{F#99}%Y-%m-%d%%{F-}  %%{F#fff}%H:%M%%{F-}
 
 [module/memory]
 type = internal/memory
@@ -303,11 +304,6 @@ menu-2-0-exec = sudo poweroff
 menu-2-1 = Cancel
 menu-2-1-foreground = #fba922
 menu-2-1-exec = menu_open-0
-
-[module/clock]
-type = internal/date
-interval = 2
-date = %%{F#999}%Y-%m-%d%%{F-}  %%{F#fff}%H:%M%%{F-}
 
 ; vim:ft=dosini
 
