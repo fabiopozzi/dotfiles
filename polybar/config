@@ -53,6 +53,8 @@ font-5 = Termsynu:size=8:antialias=false;0
 modules-left = i3
 modules-right = cpu memory
 
+tray-position = right 
+
 [module/backlight]
 type = internal/backlight
 card = intel_backlight
