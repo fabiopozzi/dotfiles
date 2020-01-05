@@ -23,14 +23,14 @@ font-5 = "Font Awesome 5 Brands:pixelsize=10;0"
 
 
 ;modules-left = powermenu mpd
-modules-left = 
-modules-right = volume backlight wireless-network wired-network battery date
+modules-left = mpd
+modules-right = wireless-network wired-network battery volume backlight
 
 [bar/bottom]
 monitor = eDP1
 bottom = true
 width = 100%
-height = 20
+height = 22
 
 background = ${bar/top.background}
 foreground = ${bar/top.foreground}
@@ -45,15 +45,15 @@ module-margin-right = 6
 
 font-0 = NotoSans-Regular:size=8;0
 font-1 = unifont:size=6;-3
-font-2 = FontAwesome:size=8;-2
+font-2 = FontAwesome:size=8;0
 font-3 = NotoSans-Regular:size=8;-1
 font-4 = MaterialIcons:size=10;-1
 font-5 = Termsynu:size=8:antialias=false;0
 
 modules-left = i3
-modules-right = cpu memory
+modules-right = cpu memory date
 
-tray-position = right 
+tray-position = right
 
 [module/backlight]
 type = internal/backlight
@@ -182,7 +182,7 @@ label-mode-background = #e60053
 label-focused = %index%
 label-focused-foreground = #ffffff
 label-focused-background = #3f3f3f
-label-focused-underline = #fba922
+label-focused-underline = #2475B0
 label-focused-padding = 2
 
 ; Available tokens:
@@ -218,7 +218,7 @@ label-urgent-padding = 2
 ; Separator in between workspaces
 label-separator = |
 label-separator-padding = 0
-label-separator-foreground = #ffb52a
+label-separator-foreground = #dae0e2
 
 [module/cpu]
 type = internal/cpu
@@ -253,8 +253,10 @@ ramp-coreload-7-foreground = #ff5555
 
 [module/date]
 type = internal/date
-date =  %%{F#fff}%A, %d %B %Y  %%{F#fff}%H:%M%%{F-}
-date-alt =    %%{F#99}%Y-%m-%d%%{F-}  %%{F#fff}%H:%M%%{F-}
+date = %%{F#fff}%A, %d %B %Y  %%{F#fff}%H:%M%%{F-}
+date-alt = %%{F#99}%Y-%m-%d%%{F-}  %%{F#fff}%H:%M%%{F-}
+;date =  %%{F#fff}%A, %d %B %Y  %%{F#fff}%H:%M%%{F-}
+;date-alt =    %%{F#99}%Y-%m-%d%%{F-}  %%{F#fff}%H:%M%%{F-}
 
 [module/memory]
 type = internal/memory
@@ -275,32 +277,32 @@ bar-used-empty = ─
 bar-used-empty-font = 6
 bar-used-empty-foreground = #444444
 
-;[module/mpd]
-;type = internal/mpd
-;format-online = <icon-prev> <icon-stop> <toggle> <icon-next>  <icon-repeat> <icon-random>  <bar-progress> <label-time>  <label-song>
-;
-;icon-play = 
-;icon-pause = 
-;icon-stop = 
-;icon-prev = 
-;icon-next = 
-;icon-random = 
-;icon-repeat = 
-;
-;toggle-on-foreground =
-;toggle-off-foreground = #55
-;
-;bar-progress-width = 45
-;bar-progress-format = %{A4:mpdseek+2: A5:mpdseek-2:}%fill%%indicator%%empty%%{A A}
-;bar-progress-indicator = |
-;bar-progress-indicator-foreground = #ff
-;bar-progress-indicator-font = 3
-;bar-progress-fill = ─
-;bar-progress-fill-foreground = #bb
-;bar-progress-fill-font = 3
-;bar-progress-empty = ─
-;bar-progress-empty-font = 3
-;bar-progress-empty-foreground = #44
+[module/mpd]
+type = internal/mpd
+format-online = <icon-prev> <icon-stop> <toggle> <icon-next>  <icon-repeat> <icon-random>  <bar-progress> <label-time>  <label-song>
+
+icon-play = 
+icon-pause = 
+icon-stop = 
+icon-prev = 
+icon-next = 
+icon-random = 
+icon-repeat = 
+
+toggle-on-foreground =
+toggle-off-foreground = #55
+
+bar-progress-width = 45
+bar-progress-format = %{A4:mpdseek+2: A5:mpdseek-2:}%fill%%indicator%%empty%%{A A}
+bar-progress-indicator = |
+bar-progress-indicator-foreground = #ff
+bar-progress-indicator-font = 3
+bar-progress-fill = ─
+bar-progress-fill-foreground = #bb
+bar-progress-fill-font = 3
+bar-progress-empty = ─
+bar-progress-empty-font = 3
+bar-progress-empty-foreground = #44
 
 [module/wireless-network]
 type = internal/network
