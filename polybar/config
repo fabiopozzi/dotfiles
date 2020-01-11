@@ -24,7 +24,7 @@ font-5 = "Font Awesome 5 Brands:pixelsize=10;0"
 
 ;modules-left = powermenu mpd
 modules-left = mpd
-modules-right = wireless-network wired-network battery volume backlight
+modules-right = tastiera wireless-network wired-network battery volume backlight
 
 [bar/bottom]
 monitor = eDP1
@@ -350,5 +350,25 @@ ramp-volume-1 = 
 ramp-volume-2 = 
 ramp-volume-3 = 
 
+[module/tastiera]
+type = custom/script
+
+; Available tokens:
+;   %counter%
+; Command to be executed (using "/usr/bin/env sh -c [command]")
+exec = get_keyboard_map.sh
+
+; Conditional command that, if defined, needs to exit successfully
+; before the main exec command is invoked.
+; Default: ""
+; exec-if = pgrep -x myservice
+
+; Will the script output continous content?
+; Default: false
+tail = false
+
+; Seconds to sleep between updates
+; Default: 5 (0 if `tail = true`)
+interval = 60
 ; vim:ft=dosini
 
