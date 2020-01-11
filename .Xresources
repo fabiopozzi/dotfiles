@@ -76,3 +76,4 @@ xterm*color15: _color15
 xterm*renderFont      : true
 xterm*faceSize        : 11
 xterm*faceName        : Inconsolata
+xterm*termName        : xterm-256color
