@@ -77,3 +77,7 @@ xterm*renderFont      : true
 xterm*faceSize        : 11
 xterm*faceName        : Inconsolata
 xterm*termName        : xterm-256color
+
+! change terminal font and size
+xterm.vt100.faceName: Source Code Pro
+xterm.vt100.faceSize: 11
