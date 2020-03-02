@@ -80,4 +80,7 @@ xterm*termName        : xterm-256color
 
 ! change terminal font and size
 xterm.vt100.faceName: Source Code Pro
-xterm.vt100.faceSize: 11
+xterm.vt100.faceSize: 10
+
+! make xterm use shared clipboard
+xterm*selectToClipboard: true
