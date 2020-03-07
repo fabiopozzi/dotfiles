@@ -8,3 +8,5 @@ xset -b &
 setxkbmap -option caps:escape
 #udiskie --tray & > /dev/null
 #nm-applet & > /dev/null
+greenclip daemon &
+
