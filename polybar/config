@@ -24,7 +24,7 @@ font-5 = "Font Awesome 5 Brands:pixelsize=10;0"
 
 ;modules-left = powermenu mpd
 modules-left = mpd
-modules-right = tastiera wireless-network wired-network battery volume backlight
+modules-right = tastiera wireless-network wired-network battery pulseaudio backlight
 
 [bar/bottom]
 monitor = ${env:MONITOR:}
@@ -335,20 +335,36 @@ interval = 3.0
 label-connected =    %{T3}%local_ip%%{T-}
 label-disconnected-foreground = #66
 
-[module/volume]
-type = internal/alsa
-speaker-mixer = Speaker
-headphone-mixer = Headphone
-headphone-id = 9
+;[module/volume]
+;type = internal/alsa
+;speaker-mixer = Speaker
+;headphone-mixer = Headphone
+;headphone-id = 9
 
-format-volume = <ramp-volume> <label-volume>
-label-muted =   muted
-label-muted-foreground = #66
+;format-volume = <ramp-volume> <label-volume>
+;label-muted =   muted
+;label-muted-foreground = #66
 
-ramp-volume-0 = 
-ramp-volume-1 = 
-ramp-volume-2 = 
-ramp-volume-3 = 
+;ramp-volume-0 = 
+;ramp-volume-1 = 
+;ramp-volume-2 = 
+;ramp-volume-3 = 
+[module/pulseaudio]
+type = internal/pulseaudio
+
+; Sink to be used, if it exists (find using `pacmd list-sinks`, name field)
+; If not, uses default sink
+;sink = alsa_output.pci-0000_12_00.3.analog-stereo
+
+; Use PA_VOLUME_UI_MAX (~153%) if true, or PA_VOLUME_NORM (100%) if false
+; Default: true
+use-ui-max = false
+
+; Interval for volume increase/decrease (in percent points)
+; Default: 5
+interval = 5
+
+click-right = pavucontrol-qt &
 
 [module/tastiera]
 type = custom/script
