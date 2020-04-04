@@ -1,11 +1,15 @@
 #!/bin/bash
 
-#feh --randomize --bg-max ~/Pictures/sfondi/* &
+feh --randomize --bg-max ~/images/* &
 xset -b &
 #xrdb ~/.Xresources &
 #LC_ALL=C parcellite &
 #dunst &
+
+# set CapsLock as escape
 setxkbmap -option caps:escape
+# disable Ctrl-s on terminal
+stty -ixon
 #udiskie --tray & > /dev/null
 #nm-applet & > /dev/null
 greenclip daemon &
