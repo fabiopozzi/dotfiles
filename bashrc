@@ -5,6 +5,10 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+# set maximum lines in history file
+HISTFILESIZE=5000000
+HISTSIZE=5000000
+
 # Avoid duplicates
 HISTCONTROL=ignoreboth:erasedups
 # Avoid cd and rm in history
