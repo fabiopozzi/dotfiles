@@ -13,7 +13,5 @@ for m in $(polybar --list-monitors | cut -d":" -f1); do
     MONITOR=$m polybar --reload top >>/tmp/polybar1.log 2>&1 &
     MONITOR=$m polybar --reload bottom >>/tmp/polybar1.log 2>&1 &
 done
-#polybar top >>/tmp/polybar1.log 2>&1 &
-#polybar bottom >>/tmp/polybar2.log 2>&1 &
 
 echo "Bars launched..."
