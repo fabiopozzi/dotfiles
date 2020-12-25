@@ -29,7 +29,7 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "/Users/fabio/Dropbox/note/")
+(setq org-directory "~/Dropbox/org/")
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -38,20 +38,21 @@
 ;; Prova ad evidenziare le parti di codice latex inserite
 (setq org-highlight-latex-and-related '(latex script entities))
 
-;; Abilita la menu bar.
-(menu-bar-mode 1)
+(setq org-todo-keywords
+      '((sequence "TODO" "PROGRESS" "TEST" "|" "DONE" "RIMANDATO")))
 
-;; Migliora indentazione codice C
-(setq c-default-style "linux"
-      c-basic-offset 4)
-(setq indent-tabs-mode nil)
+;; PDFs visited in Org-mode are opened in Evince (and not in the default choice) https://stackoverflow.com/a/8836107/789593
+(add-hook 'org-mode-hook
+      '(lambda ()
+         (delete '("\\.pdf\\'" . default) org-file-apps)
+         (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
 
-;; Config indentazione python
-(add-hook 'python-mode-hook
-      (lambda ()
-        (setq indent-tabs-mode nil)
-        (setq tab-width 4)
-        (setq python-indent-offset 4)))
+;; indentazione con tabs per file c/c++
+(setq-hook! '(c-mode-hook c++-mode-hook) indent-tabs-mode t)
+(setq c-default-style "k&r"
+      c-basic-offset 4
+      tab-width 4)
+
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -68,46 +69,3 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
-;; (let* ((variable-tuple
-;;         (cond ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
-;;               ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
-;;               ((x-list-fonts "Verdana")         '(:font "Verdana"))
-;;               ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
-;;               (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
-;;        (base-font-color     (face-foreground 'default nil 'default))
-;;        (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
-;; 
-;;   (custom-theme-set-faces
-;;    'user
-;;    `(org-level-8 ((t (,@headline ,@variable-tuple))))
-;;    `(org-level-7 ((t (,@headline ,@variable-tuple))))
-;;    `(org-level-6 ((t (,@headline ,@variable-tuple))))
-;;    `(org-level-5 ((t (,@headline ,@variable-tuple))))
-;;    `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
-;;    `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
-;;    `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5))))
-;;    `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75))))
-;;    `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
-;; 
-;; (custom-theme-set-faces
-;;  'user
-;;  '(org-block ((t (:inherit fixed-pitch))))
-;;  '(org-code ((t (:inherit (shadow fixed-pitch)))))
-;;  '(org-document-info ((t (:foreground "dark orange"))))
-;;  '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
-;;  '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
-;;  '(org-link ((t (:foreground "royal blue" :underline t))))
-;;  '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-;;  '(org-property-value ((t (:inherit fixed-pitch))) t)
-;;  '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-;;  '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
-;;  '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
-;;  '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
-;; 
-;; (custom-theme-set-faces
-;;  'user
-;;  '(variable-pitch ((t (:family "Source Sans Pro" :height 180 :weight thin))))
-;;  '(fixed-pitch ((t ( :family "Monaco" :height 160)))))
-;; 
-;; (add-hook 'org-mode-hook 'variable-pitch-mode)
-;; (add-hook 'org-mode-hook 'visual-line-mode)
