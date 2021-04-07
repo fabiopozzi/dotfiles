@@ -29,14 +29,17 @@ man() {
     command man "$@"
 }
 
-# Add ruby gem path to PATH variable
-PATH="$PATH:$(ruby -e 'puts Gem.user_dir')/bin"
-PATH="$PATH:~/.npm-global/bin"
+PATH="$PATH:$HOME/.emacs.d/bin"
+PATH="$PATH:$HOME/.local/bin"
+PATH="$PATH:$HOME/bin"
 
 alias ls='ls --color=auto'
 alias ll='ls --color=auto -lah'
+alias cat='cat -v'
+alias less='less -R'
 alias gst='git status'
 alias pbcopy='xsel --clipboard --input'
 alias pbpaste='xsel --clipboard --output'
-alias update='sudo pacman -Syu'
-PS1='[\u@\h \W]\$ '
+
+force_color_prompt=yes
+PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
