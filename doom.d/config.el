@@ -65,9 +65,27 @@
 
 ;; indentazione con tabs per file c/c++
 (setq-hook! '(c-mode-hook c++-mode-hook) indent-tabs-mode t)
-(setq c-default-style "k&r"
-      c-basic-offset 4
-      tab-width 4)
+(setq-default c-default-style "linux"
+              c-basic-offset 4
+              tab-width 4)
+
+(add-hook 'python-mode-hook
+    (lambda ()
+       (setq indent-tabs-mode nil)
+       (setq tab-width 4)))
+
+;; latex settings
+(setq +latex-viewers '(evince))
+
+;; clangd
+(setq lsp-clients-clangd-args '("-j=3"
+                                "--background-index"
+                                "--clang-tidy"
+                                "--completion-style=detailed"
+                                "--header-insertion=never"))
+(after! lsp-clangd (set-lsp-priority! 'clangd 2))
+
+(add-to-list 'load-path "/home/fabio/go")
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
