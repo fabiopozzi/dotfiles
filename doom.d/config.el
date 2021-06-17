@@ -55,6 +55,14 @@
          (delete '("\\.pdf\\'" . default) org-file-apps)
          (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
 
+(setq org-emphasis-alist
+  '(("*" (bold :foreground "Orange" ))
+    ("/" (italic :foreground "green"))
+    ("_" underline)
+    ("=" (:background "maroon" :foreground "white"))
+    ("~" (:background "deep sky blue" :foreground "MidnightBlue"))
+    ("+" (:strike-through t))))
+
 ;; indentazione con tabs per file c/c++
 (setq-hook! '(c-mode-hook c++-mode-hook) indent-tabs-mode t)
 (setq c-default-style "k&r"
