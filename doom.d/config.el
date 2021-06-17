@@ -31,6 +31,11 @@
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Dropbox/org/")
 
+(setq org-journal-dir "~/Documents/org/journal")
+
+;; default file for org capture
+(setq org-default-notes-file (concat org-directory "/TODO.org"))
+
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
