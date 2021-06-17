@@ -40,6 +40,9 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
+;; abilita menu-bar
+(menu-bar-mode 1)
+
 ;; Prova ad evidenziare le parti di codice latex inserite
 (setq org-highlight-latex-and-related '(latex script entities))
 
