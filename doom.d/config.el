@@ -55,10 +55,12 @@
          (delete '("\\.pdf\\'" . default) org-file-apps)
          (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
 
+(setq company-global-modes '(not org-mode))
+
 (setq org-emphasis-alist
-  '(("*" (bold :foreground "Orange" ))
-    ("/" (italic :foreground "green"))
-    ("_" underline)
+  '(("*" (bold :background "black" :foreground "Orange" ))
+    ("/" (italic :background "black" :foreground "green"))
+    ("_" underline (:background "black"))
     ("=" (:background "maroon" :foreground "white"))
     ("~" (:background "deep sky blue" :foreground "MidnightBlue"))
     ("+" (:strike-through t))))
