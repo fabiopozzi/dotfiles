@@ -29,7 +29,7 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/Dropbox/org/")
+(setq org-directory "~/Nextcloud/org")
 
 (setq org-journal-dir "~/Documents/org/journal")
 
@@ -86,8 +86,6 @@
                                 "--completion-style=detailed"
                                 "--header-insertion=never"))
 (after! lsp-clangd (set-lsp-priority! 'clangd 2))
-
-(add-to-list 'load-path "/home/fabio/go")
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
