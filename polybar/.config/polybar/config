@@ -24,7 +24,7 @@ font-5 = "Font Awesome 5 Brands:pixelsize=10;0"
 
 ;modules-left = powermenu mpd
 modules-left = mpd
-modules-right = tastiera wireless-network wired-network battery pulseaudio backlight
+modules-right = wireless-network wired-network battery backlight
 
 [bar/bottom]
 monitor = ${env:MONITOR:}
@@ -306,7 +306,7 @@ bar-progress-empty-foreground = #44
 
 [module/wireless-network]
 type = internal/network
-interface = wlp3s0
+interface = wls1
 interval = 3.0
 ping-interval = 10
 
