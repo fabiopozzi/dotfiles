@@ -188,5 +188,6 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+exec_always --no-startup-id "setxkbmap -option caps:escape"
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 #exec_always --no-startup-id $HOME/dotfiles/i3/autostart
