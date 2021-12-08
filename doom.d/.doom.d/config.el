@@ -19,17 +19,18 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
- (setq doom-font (font-spec :family "monospace" :size 18 :weight 'semi-light)
-       doom-variable-pitch-font (font-spec :family "sans" :size 18))
+ (setq doom-font (font-spec :family "monospace" :size 20 :weight 'semi-light)
+       doom-variable-pitch-font (font-spec :family "sans" :size 20))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-dark+)
+;;(setq doom-theme 'doom-dark+)
+(setq doom-theme 'doom-one)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/Dropbox/org/")
+(setq org-directory "~/Nextcloud/org/")
 
 (setq org-journal-dir "~/Documents/org/journal")
 
@@ -87,8 +88,9 @@
                                 "--header-insertion=never"))
 (after! lsp-clangd (set-lsp-priority! 'clangd 2))
 
-(add-to-list 'load-path "/home/fabio/go")
+(add-to-list 'exec-path "/home/fabio/.local/bin")
 
+(setq initial-frame-alist '((top . 0) (left . 0) (width . 161) (height . 64)))
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
