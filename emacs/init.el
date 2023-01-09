@@ -28,67 +28,106 @@
   (package-install 'use-package))
 (require 'use-package)
 
-;;(setq use-package-always-ensure t)
+;; installa tutti i pacchetti che non sono presenti
+(setq use-package-always-ensure t)
 
 (column-number-mode)
 ;; Display line numbers in every buffer
 (global-display-line-numbers-mode 1)
 
-;; Load the Modus Vivendi dark theme
-(load-theme 'modus-vivendi t)
 
 ;;(use-package command-log-mode)
 
-;;(use-package all-the-icons)
+(use-package all-the-icons)
 
-;;(use-package doom-modeline
-;;  :init (doom-modeline-mode 1)
-;;  :custom ((doom-modeline-height 15)))
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 15)))
 
-;;(use-package doom-themes
-;;  :init (load-theme 'doom-dracula t))
+(use-package doom-themes
+  :init (load-theme 'doom-dracula t))
 
-;;(use-package rainbow-delimiters
-;;  :hook (prog-mode . rainbow-delimiters-mode))
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
 
-;;(use-package evil
-;;  :init
-;;  (setq evil-want-integration t)
-;;  (setq evil-want-keybinding nil)
-;;  (setq evil-want-C-u-scroll t)
-;;  (setq evil-want-C-i-jump nil)
-;;  :config
-;;  (evil-mode 1)
-;;  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-;;  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+(use-package evil
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  :config
+  (evil-mode 1)
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
   ;; Use visual line motions even outside of visual-line-mode buffers
-;;  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-;;  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-;;  (evil-set-initial-state 'messages-buffer-mode 'normal)
-;;  (evil-set-initial-state 'dashboard-mode 'normal))
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal))
 
-;;(use-package evil-collection
-;;  :after evil
-;;  :config
-;;  (evil-collection-init))
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
 
-;;(use-package hydra)
+;; custom evil keybindings
+(evil-set-leader 'normal (kbd "SPC"))
+(evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
 
-;;(defhydra hydra-text-scale (:timeout 4)
-;;  "scale text"
-;;  ("j" text-scale-increase "in")
-;;  ("k" text-scale-decrease "out")
-;;  ("f" nil "finished" :exit t))
+(use-package hydra)
+
+(defhydra hydra-text-scale (:timeout 4)
+  "scale text"
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("f" nil "finished" :exit t))
+
+(use-package perspective
+  :bind
+  ("C-x C-b" . persp-list-buffers)         ; or use a nicer switcher, see below
+  :custom
+  (persp-mode-prefix-key (kbd "C-x x"))  ; pick your own prefix key here
+  :init
+  (persp-mode))
+
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+              ("C-c p" . projectile-command-map)))
+
+(use-package magit
+  :commands (magit-status magit-get-current-branch)
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+(require 'eglot)
+(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+(add-hook 'c-mode-hook 'eglot-ensure)
+(add-hook 'c++-mode-hook 'eglot-ensure)
+
+;; switch buffer using f2-f3
+(global-set-key (kbd "<f2>") 'previous-buffer)
+(global-set-key (kbd "<f3>") 'next-buffer)
 
 ;; Evidenzia linea corrente
 (hl-line-mode 1)
 ;; Evita blink cursore
 (blink-cursor-mode -1)
 
+;; Font Fira code
+(defvar dimensione-font-default 160)
+(set-face-attribute 'default nil :font "Fira Code Retina" :height dimensione-font-default)
+
 ;; Abilita ricordo file recenti
 (recentf-mode 1)
+
+;; Abilita fido mode per ricerca nei buffer
+(fido-vertical-mode 1)
 
 ;; Move customization variables to a separate file and load it
 (setq custom-file (locate-user-emacs-file "custom-vars.el"))
@@ -103,3 +142,15 @@
 ;; Revert Dired and other buffers
 (setq global-auto-revert-non-file-buffers t)
 
+(custom-set-variables
+ ; custom-set-variables was added by Custom.
+ ; If you edit it by hand, you could mess it up, so be careful.
+ ; Your init file should contain only one such instance.
+ ; If there is more than one, they won't work right.
+ '(package-selected-packages '(all-the-icons use-package)))
+(custom-set-faces
+ ; custom-set-faces was added by Custom.
+ ; If you edit it by hand, you could mess it up, so be careful.
+ ; Your init file should contain only one such instance.
+ ; If there is more than one, they won't work right.
+ )
