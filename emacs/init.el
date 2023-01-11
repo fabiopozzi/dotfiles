@@ -74,8 +74,13 @@
   (evil-collection-init))
 
 ;; custom evil keybindings
-(evil-set-leader 'normal (kbd "SPC"))
+
+;; set leader key in tutti gli stati
+(evil-set-leader nil (kbd "SPC"))
+;; tasti vari
 (evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
+(evil-define-key 'normal 'global (kbd "<leader>b") 'list-buffers)
+(evil-define-key 'normal 'global (kbd "<leader>g") 'magit-status)
 
 (use-package hydra)
 
