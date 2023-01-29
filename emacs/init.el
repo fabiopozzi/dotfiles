@@ -13,6 +13,9 @@
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
+;; setup exec-path per usare ag
+(setq exec-path (append exec-path '("/usr/bin")))
+
 ;; Initialize package sources
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -39,6 +42,10 @@
 ;;(use-package command-log-mode)
 
 (use-package all-the-icons)
+
+(use-package htmlize
+  :custom (org-html-htmlize-output-type 'css)
+  )
 
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
@@ -103,12 +110,20 @@
   :init
   (projectile-mode +1)
   :bind (:map projectile-mode-map
-              ("C-c p" . projectile-command-map)))
+              ("C-c p" . projectile-command-map))
+  )
 
 (use-package magit
   :commands (magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+(use-package counsel
+  :ensure t
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  )
 
 (require 'eglot)
 (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
