@@ -10,6 +10,15 @@
 
 (menu-bar-mode 1)  ; Leave this one on if you're a beginner!
 
+;; Write backups to ~/.emacs.d/backup/
+(setq backup-directory-alist '(("." . "~/.emacs_backup"))
+      backup-by-copying      t  ; Don't de-link hard links
+      version-control        t  ; Use version numbers on backups
+      delete-old-versions    t  ; Automatically delete excess backups:
+      kept-new-versions      20 ; how many of the newest versions to keep
+      kept-old-versions      5) ; and how many of the old
+
+
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
@@ -39,7 +48,11 @@
 (global-display-line-numbers-mode 1)
 
 
-;;(use-package command-log-mode)
+;; (use-package command-log-mode)
+(use-package elpy
+  :ensure t
+  :init
+  (elpy-enable))
 
 (use-package all-the-icons)
 
@@ -79,6 +92,12 @@
   :after evil
   :config
   (evil-collection-init))
+
+(use-package neotree
+  :ensure t
+  :config
+  (global-set-key (kbd "<f9>") 'neotree-toggle))
+
 
 ;; custom evil keybindings
 
@@ -125,14 +144,66 @@
   (setq ivy-count-format "(%d/%d) ")
   )
 
+;; dired change default behaviour
+(defun g-dired-postprocess-ls-output ()
+  "Postprocess the list of files printed by the ls program when
+executed by Dired."
+  (save-excursion
+    (goto-char (point-min))
+    (while (not (eobp))
+      ;; Go to the beginning of the next line representing a file
+      (while (null (dired-get-filename nil t))
+        (dired-next-line 1))
+      (beginning-of-line)
+      ;; Narrow to the line and process it
+      (let ((start (line-beginning-position))
+            (end (line-end-position)))
+        (save-restriction
+          (narrow-to-region start end)
+          (setq inhibit-read-only t)
+          (unwind-protect
+              (g-dired-postprocess-ls-line)
+            (setq inhibit-read-only nil))))
+      ;; Next line
+      (dired-next-line 1))))
+
+(defun g-dired-disable-line-wrapping ()
+  (setq truncate-lines t))
+
+(defun g-dired-postprocess-ls-line ()
+  "Postprocess a single line in the ls output, i.e. the information
+about a single file. This function is called with the buffer
+narrowed to the line."
+  ;; Highlight everything but the filename
+  (when (re-search-forward directory-listing-before-filename-regexp nil t 1)
+    (add-text-properties (point-min) (match-end 0) '(font-lock-face shadow)))
+  ;; Hide the link count
+  (beginning-of-line)
+  (when (re-search-forward " +[0-9]+" nil t 1)
+    (add-text-properties (match-beginning 0) (match-end 0) '(invisible t))))
+
+(use-package dired
+  :config
+  (setq dired-listing-switches "-alh --time-style=long-iso")
+
+  :hook
+  ((dired-mode-hook . g-dired-disable-line-wrapping)
+   (dired-after-readin-hook . g-dired-postprocess-ls-output)))
+;; end dired customization
+
 (require 'eglot)
 (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
 (add-hook 'c-mode-hook 'eglot-ensure)
 (add-hook 'c++-mode-hook 'eglot-ensure)
 
+;; switcha ad ultimo buffer usato con f1
+(global-set-key (kbd "<f1>")  'mode-line-other-buffer)
 ;; switch buffer using f2-f3
 (global-set-key (kbd "<f2>") 'previous-buffer)
 (global-set-key (kbd "<f3>") 'next-buffer)
+
+(global-set-key (kbd "<f7>") 'org-clock-in)
+(global-set-key (kbd "<f8>") 'org-clock-out)
 
 ;; Evidenzia linea corrente
 (hl-line-mode 1)
