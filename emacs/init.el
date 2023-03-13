@@ -35,9 +35,9 @@
 (package-initialize)
 
 ;; Bootstrap `use-package`
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+;; (unless (package-installed-p 'use-package)
+;;   (package-refresh-contents)
+;;   (package-install 'use-package))
 (require 'use-package)
 
 ;; installa tutti i pacchetti che non sono presenti
@@ -47,6 +47,11 @@
 ;; Display line numbers in every buffer
 (global-display-line-numbers-mode 1)
 
+;; indentation settings
+(setq-default indent-tabs-mode nil)
+(setq tab-width 4) ; tabs larghi 4
+(setq c-default-style "k&r"
+	c-basic-offset 4)
 
 ;; (use-package command-log-mode)
 (use-package elpy
@@ -199,8 +204,8 @@ narrowed to the line."
 ;; switcha ad ultimo buffer usato con f1
 (global-set-key (kbd "<f1>")  'mode-line-other-buffer)
 ;; switch buffer using f2-f3
-(global-set-key (kbd "<f2>") 'previous-buffer)
-(global-set-key (kbd "<f3>") 'next-buffer)
+;; (global-set-key (kbd "<f2>") 'previous-buffer)
+;; (global-set-key (kbd "<f3>") 'next-buffer)
 
 (global-set-key (kbd "<f7>") 'org-clock-in)
 (global-set-key (kbd "<f8>") 'org-clock-out)
