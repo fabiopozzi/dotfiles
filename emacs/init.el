@@ -393,6 +393,14 @@ the cursor by ARG lines."
 	(vterm)
 )
 (global-set-key (kbd "<f4>") 'split-and-vterm)
+
+(defun my/org-insert-current-time-as-inactive-time-stamp ()
+   (interactive)
+   (org-insert-heading)
+   (insert (format-time-string "%d %B")))
+
+(define-key org-mode-map (kbd "C-c _") #'my/org-insert-current-time-as-inactive-time-stamp)
+
 (custom-set-variables
  ; custom-set-variables was added by Custom.
  ; If you edit it by hand, you could mess it up, so be careful.
