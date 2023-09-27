@@ -68,8 +68,8 @@
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
-(use-package doom-themes
-  :init (load-theme 'doom-dracula t))
+(use-package zenburn-theme
+  :config (load-theme 'zenburn t))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
