@@ -341,6 +341,8 @@ the cursor by ARG lines."
   (setq ivy-count-format "(%d/%d) ")
   )
 
+(use-package vterm
+    :ensure t)
 
 (require 'eglot)
 (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
@@ -384,6 +386,13 @@ the cursor by ARG lines."
 ;; Revert Dired and other buffers
 (setq global-auto-revert-non-file-buffers t)
 
+(defun split-and-vterm()
+	(interactive)
+	(split-window-right)
+	(other-window -1)
+	(vterm)
+)
+(global-set-key (kbd "<f4>") 'split-and-vterm)
 (custom-set-variables
  ; custom-set-variables was added by Custom.
  ; If you edit it by hand, you could mess it up, so be careful.
