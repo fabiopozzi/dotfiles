@@ -102,200 +102,9 @@
   :config
   (global-set-key (kbd "<f9>") 'neotree-toggle))
 
-(defvar ic/elfeed-external-mode-map (make-sparse-keymap))
-(define-minor-mode ic/elfeed-external-mode "A minor mode to add external modes `showing` elfeed entry content" (use-local-map ic/elfeed-external-mode-map))
-
-;;;###autoload
-(defun ic/split-and-follow-horizontally ()
-  (interactive)
-  (split-window-right)
-  (balance-windows)
-  (other-window 1))
-
-;;;###autoload
-(defun ic/split-and-follow-vertically ()
-  (interactive)
-  (split-window-below)
-  (balance-windows)
-  (other-window 1))
-
 (global-set-key (kbd "C-x 2") 'ic/split-and-follow-horizontally)
 (global-set-key (kbd "C-x 3") 'ic/split-and-follow-vertically)
 
-(use-package elfeed
-  :defer t
-  :config
-  (evil-set-initial-state 'elfeed-search-mode 'emacs) 
-  (evil-set-initial-state 'elfeed-show-mode 'emacs) 
-  (setq elfeed-feeds
-        '("http://nullprogram.com/feed/"
-          "https://planet.emacslife.com/atom.xml"))
-  :bind (:map elfeed-search-mode-map
-              ("j" . next-line)
-              ("k" . previous-line)
-              ("C-<tab>" . ic/elfeed-external-next-entry)
-              ("E" . ic/elfeed-enqueue-media-url)
-              ("Q" . ic/elfeed-save-and-quit)
-              ("r" . ic/elfeed-mark-as-read)
-              ("R" . ic/elfeed-mark-all-as-read)
-           :map elfeed-show-mode-map
-              ("C-<tab>" . ic/elfeed-external-next-entry)
-           :map ic/elfeed-external-mode-map
-           ("C-<tab>" . ic/elfeed-external-next-entry)))
-;;
-;; External mode functions
-;;
-
-;;;###autoload
-(defun ic/elfeed-external-buffer-p (buf)
-  "Returns non-nil if BUF has enabled the ic/elfeed-external-mode."
-  (with-current-buffer buf
-    (and (boundp 'ic/elfeed-external-mode) ic/elfeed-external-mode)))
-
-;;;###autoload
-(defun ic/elfeed-external-buffer-list ()
-  "List all buffers that have the elfeed-external-mode enabled."
-  (seq-filter (lambda (b) (and (not (eq (elfeed-search-buffer) b)) (ic/elfeed-external-buffer-p b))) (buffer-list)))
-
-;;;###autoload
-(defun ic/elfeed-current-buffer-external ()
-  (interactive)
-  "Returns non-nil if BUF has enabled the ic/elfeed-external-mode."
-  (let ((result (and (boundp 'ic/elfeed-external-mode) ic/elfeed-external-mode))
-        (name (buffer-name (current-buffer))))
-        result))
-
-;;;###autoload
-(defun ic/elfeed-delete-non-search-windows ()
-  (interactive)
-  "Delete all elfeed non search buffers."
-  ;; External
-  (condition-case nil
-      (ic/elfeed-delete-external-windows)
-    (error nil))
-
-  ;; Show
-  (condition-case nil
-      (ic/elfeed-delete-show-windows)
-    (error nil)))
-
-;;;###autoload
-(defun ic/elfeed-delete-external-windows ()
-  (mapcar (lambda (w) (when w (delete-window w))) (mapcar (lambda (b) (get-buffer-window b 'visible)) (ic/elfeed-external-buffer-list))))
-
-;;;###autoload
-(defun ic/elfeed-show-buffer-list ()
-  "List all buffers that have teh elfeed-show-mode enabled."
-  (seq-filter (lambda (b) (ic/elfeed-show-buffer-p b)) (buffer-list)))
-
-;;;###autoload
-(defun ic/elfeed-delete-show-windows ()
-  (interactive)
-  "List all buffers that have the elfeed-show-mode enabled."
-  (mapcar (lambda (w) (when w (delete-window w))) (mapcar (lambda (b) (get-buffer-window b 'visible)) (ic/elfeed-show-buffer-list))))
-
-;;;###autoload
-(defun ic/mark-current-as-read ()
-  (interactive)
-  "Mark current entry as read."
-  (let ((current (elfeed-search-selected :ignore-region)))
-    (elfeed-untag current 'unread)
-    (elfeed-search-update-entry current)
-    (elfeed-db-save-safe)))
-
-(defun ic/elfeed-show-buffer-p (buf)
-  "Returns non-nil if BUF has enabled the ic/elfeed-external-mode."
-  (with-current-buffer buf (equal major-mode 'elfeed-show-mode)))
-
-
-;;;###autoload
-(defun ic/elfeed-jump-to-search(&optional visited)
-  (interactive)
-  "Jump to a elfeed-search window. VISITED is an optional list with windows already visited."
-  (let* ((visited (or visited '()))
-         (buffer (current-buffer))
-         (name (buffer-name buffer))
-         (window (frame-selected-window))
-         (found (equal "*elfeed-search*" name))
-         (current-buffer-selected (equal (get-buffer-window buffer) window)))
-
-    (cond
-     ((and found current-buffer-selected) t)
-     ((member name visited) nil)
-     (t (progn (other-window 1)
-               (ic/elfeed-jump-to-search (add-to-list 'visited name))))))) 
-
-;;;###autoload
-(defun ic/elfeed-external-next-entry (&optional visited)
-  (interactive)
-  "Closes external elfeed windows and moves to next entry."
-  (ic/elfeed-delete-non-search-windows)
-  (ic/elfeed-jump-to-search)
-  (let ((current (elfeed-search-selected :ignore-region)))
-    (elfeed-untag current 'unread)
-    (elfeed-search-update-entry current))
-  (next-line)
-  (ic/elfeed-open-in-dwim (elfeed-search-selected :ignore-region)))
-                              
-;;; credits: https://emacs.stackexchange.com/questions/15033/how-to-mark-current-line-and-move-cursor-to-next-line
-;;;###autoload
-(defun ic/mark-line (&optional arg)
-  "Select the current line and move the cursor by ARG lines IF no region is selected.
-If a region is already selected when calling this command, only move
-the cursor by ARG lines."
-  (interactive "p")
-  (let ((lines (or arg 1)))
-    (when (not (use-region-p))
-      (forward-line 0)
-      (set-mark-command nil))
-    (forward-line lines)))
-
-;;;###autoload
-(defun ic/elfeed-mark-as-read ()
-  "Mark all items in the elfeed buffer as read."
-  (interactive)
-  (ic/mark-line 0)
-  (elfeed-search-untag-all-unread))
-
-;;;###autoload
-(defun ic/elfeed-mark-all-as-read ()
-  "Mark all items in the elfeed buffer as read."
-  (interactive)
-  (mark-whole-buffer)
-  (elfeed-search-untag-all-unread))
-
-;;;###autoload
-(defun ic/elfeed-save-and-quit ()
-  "Wrapper to save the elfeed db to disk before quiting"
-  (interactive)
-  (elfeed-db-save)
-  (quit-window))
-
-;;
-;; Window placement and behavior
-;;
-(defadvice elfeed-search-show-entry (around elfeed-search-show-entry-around activate)
-  "Open entries in a new buffer below."
-  (ic/mark-current-as-read)
-  (ic/elfeed-delete-show-windows)
-  (ic/split-and-follow-vertically)
-  ad-do-it)
-
-(defun ic/elfeed-kill-external-buffer-and-window (&optional buffer-or-name)
-  "Kill the github issues window and buffer.  Return t if grep window was found."
-  (if (or (derived-mode-p 'elfeed-show-mode) (ic/elfeed-current-buffer-external))
-        (progn
-          (kill-buffer-and-window)
-          t)
-        nil))
-
-
-;; elfeed-kill-buffer should use (kill-current-buffer) vs (kill-buffer (current-buffer))  to trigger listeners
-;; Let's use an advice to fix that.
-(advice-add #'elfeed-kill-buffer :around #'kill-current-buffer)
-
-
-(global-set-key (kbd "C-x w") 'elfeed)
 ;; custom evil keybindings
 
 ;; set leader key in tutti gli stati
@@ -394,12 +203,12 @@ the cursor by ARG lines."
 )
 (global-set-key (kbd "<f4>") 'split-and-vterm)
 
-(defun my/org-insert-current-time-as-inactive-time-stamp ()
+(defun my-org-insert-date ()
    (interactive)
    (org-insert-heading)
    (insert (format-time-string "%d %B")))
 
-(define-key org-mode-map (kbd "C-c _") #'my/org-insert-current-time-as-inactive-time-stamp)
+(global-set-key (kbd "C-c _") #'my-org-insert-date)
 
 (custom-set-variables
  ; custom-set-variables was added by Custom.
