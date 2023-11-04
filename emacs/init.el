@@ -10,6 +10,11 @@
 
 (menu-bar-mode 1)  ; Leave this one on if you're a beginner!
 
+(global-tab-line-mode t) ; a tab for each buffer
+(setq tab-line-new-button-show nil)  ;; do not show add-new button
+(setq tab-line-close-button-show nil)  ;; do not show close button
+
+
 ;; Write backups to ~/.emacs.d/backup/
 (setq backup-directory-alist '(("." . "~/.emacs_backup"))
       backup-by-copying      t  ; Don't de-link hard links
@@ -209,6 +214,18 @@
    (insert (format-time-string "%d %B")))
 
 (global-set-key (kbd "C-c _") #'my-org-insert-date)
+
+(defun switch-scuola-persp ()
+  (interactive)
+  (persp-state-load "~/persp/scuola.save"))
+
+(global-set-key (kbd "C-c .") #'switch-scuola-persp)
+
+(defun switch-lavoro-persp ()
+  (interactive)
+  (persp-state-load "~/persp/lavoro.save"))
+
+(global-set-key (kbd "C-c ,") #'switch-lavoro-persp)
 
 (custom-set-variables
  ; custom-set-variables was added by Custom.
