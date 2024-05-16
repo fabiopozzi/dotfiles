@@ -232,13 +232,18 @@
   (interactive)
   (persp-state-load "~/persp/scuola.save"))
 
-(global-set-key (kbd "C-c .") #'switch-scuola-persp)
+(global-set-key (kbd "C-c s") #'switch-scuola-persp)
 
 (defun switch-lavoro-persp ()
   (interactive)
   (persp-state-load "~/persp/lavoro.save"))
 
-(global-set-key (kbd "C-c ,") #'switch-lavoro-persp)
+(global-set-key (kbd "C-c l") #'switch-lavoro-persp)
+
+; config org mode per eseguire codice
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)))
 
 (custom-set-variables
  ; custom-set-variables was added by Custom.
