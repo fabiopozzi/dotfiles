@@ -171,11 +171,16 @@
 (add-hook 'c-mode-hook 'eglot-ensure)
 (add-hook 'c++-mode-hook 'eglot-ensure)
 
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
+
 ;; switcha ad ultimo buffer usato con f1
 (global-set-key (kbd "<f1>")  'mode-line-other-buffer)
-;; switch buffer using f2-f3
-;; (global-set-key (kbd "<f2>") 'previous-buffer)
-;; (global-set-key (kbd "<f3>") 'next-buffer)
 
 (global-set-key (kbd "<f7>") 'org-clock-in)
 (global-set-key (kbd "<f8>") 'org-clock-out)
