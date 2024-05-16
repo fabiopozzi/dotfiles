@@ -70,9 +70,14 @@
   :custom (org-html-htmlize-output-type 'css)
   )
 
-(use-package doom-modeline
-  :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 15)))
+(use-package moody
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode))
+
+(use-package minions
+  :config (minions-mode 1))
 
 (use-package zenburn-theme
   :config (load-theme 'zenburn t))
