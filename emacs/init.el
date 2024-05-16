@@ -8,11 +8,11 @@
 (tooltip-mode -1)
 (set-fringe-mode 10) ; Give some breathing room
 
-(menu-bar-mode 1)  ; Leave this one on if you're a beginner!
+(menu-bar-mode -1)  ; Leave this one on if you're a beginner!
 
-(global-tab-line-mode t) ; a tab for each buffer
-(setq tab-line-new-button-show nil)  ;; do not show add-new button
-(setq tab-line-close-button-show nil)  ;; do not show close button
+;(global-tab-line-mode t) ; a tab for each buffer
+;(setq tab-line-new-button-show nil)  ;; do not show add-new button
+;(setq tab-line-close-button-show nil)  ;; do not show close button
 
 
 ;; Write backups to ~/.emacs.d/backup/
