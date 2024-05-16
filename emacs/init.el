@@ -108,6 +108,8 @@
   :config
   (evil-collection-init))
 
+(evil-set-undo-system 'undo-redo)
+
 (use-package neotree
   :ensure t
   :config
