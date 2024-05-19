@@ -59,10 +59,12 @@
 	c-basic-offset 4)
 
 ;; (use-package command-log-mode)
-(use-package elpy
+
+(use-package dumb-jump
   :ensure t
-  :init
-  (elpy-enable))
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+)
 
 (use-package all-the-icons)
 
