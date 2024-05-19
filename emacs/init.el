@@ -199,7 +199,7 @@
 (blink-cursor-mode -1)
 
 ;; Font Fira code
-(defvar dimensione-font-default 160)
+(defvar dimensione-font-default 140)
 (set-face-attribute 'default nil :font "Fira Code Retina" :height dimensione-font-default)
 
 ;; Abilita ricordo file recenti
