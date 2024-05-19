@@ -180,6 +180,12 @@
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
+(use-package imenu-list
+  :ensure t
+  :config
+  (setq imenu-list-focus-after-activation t))
+
+(global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
 
 ;; switcha ad ultimo buffer usato con f1
 (global-set-key (kbd "<f1>")  'mode-line-other-buffer)
