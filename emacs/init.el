@@ -59,6 +59,11 @@
 	c-basic-offset 4)
 
 ;; (use-package command-log-mode)
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "pandoc"))
+
 
 (use-package dumb-jump
   :ensure t
@@ -81,8 +86,8 @@
 (use-package minions
   :config (minions-mode 1))
 
-(use-package zenburn-theme
-  :config (load-theme 'zenburn t))
+(use-package solarized-theme
+  :config (load-theme 'solarized-dark t))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -125,7 +130,7 @@
 ;; set leader key in tutti gli stati
 (evil-set-leader nil (kbd "SPC"))
 ;; tasti vari
-(evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
+;(evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
 (evil-define-key 'normal 'global (kbd "<leader>b") 'list-buffers)
 (evil-define-key 'normal 'global (kbd "<leader>g") 'magit-status)
 
@@ -173,6 +178,9 @@
 (add-hook 'c-mode-hook 'eglot-ensure)
 (add-hook 'c++-mode-hook 'eglot-ensure)
 
+;; hideshow
+(add-hook 'python-mode-hook     'hs-minor-mode)
+
 (use-package treesit-auto
   :custom
   (treesit-auto-install 'prompt)
@@ -184,6 +192,10 @@
   :ensure t
   :config
   (setq imenu-list-focus-after-activation t))
+
+;; vterm toggle
+(global-set-key [f2] 'vterm-toggle)
+(global-set-key [C-f2] 'vterm-toggle-cd)
 
 (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
 
