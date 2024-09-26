@@ -10,10 +10,12 @@
 
 (menu-bar-mode -1)  ; Leave this one on if you're a beginner!
 
-;(global-tab-line-mode t) ; a tab for each buffer
-;(setq tab-line-new-button-show nil)  ;; do not show add-new button
-;(setq tab-line-close-button-show nil)  ;; do not show close button
+(global-tab-line-mode t) ; a tab for each buffer
+(setq tab-line-new-button-show nil)  ;; do not show add-new button
+(setq tab-line-close-button-show nil)  ;; do not show close button
 
+;; show trailing whitespace
+(setq-default show-trailing-whitespace t)
 
 ;; Write backups to ~/.emacs.d/backup/
 (setq backup-directory-alist '(("." . "~/.emacs_backup"))
@@ -23,6 +25,8 @@
       kept-new-versions      20 ; how many of the newest versions to keep
       kept-old-versions      5) ; and how many of the old
 
+;; setup TRAMP
+(setq tramp-default-method "ssh")
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -37,7 +41,6 @@
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("elpa" . "https://elpa.gnu.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")))
-;;(package-initialize)
 
 ;; Bootstrap `use-package`
  (unless (package-installed-p 'use-package)
@@ -46,7 +49,25 @@
 (require 'use-package)
 
 ;; installa tutti i pacchetti che non sono presenti
-(setq use-package-always-ensure t)
+;;(setq use-package-always-ensure t)
+
+;; setup straight.el
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
 
 (column-number-mode)
 ;; Display line numbers in every buffer
@@ -71,6 +92,10 @@
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 )
 
+(use-package indent-bars
+  :ensure t
+  :hook ((python-mode yaml-mode) . indent-bars-mode)) ; or whichever modes you prefer
+
 (use-package all-the-icons)
 
 (use-package htmlize
@@ -92,35 +117,39 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-(use-package evil
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
-  :config
-  (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+;(use-package evil
+  ;:init
+  ;(setq evil-want-integration t)
+  ;(setq evil-want-keybinding nil)
+  ;(setq evil-want-C-u-scroll t)
+  ;(setq evil-want-C-i-jump nil)
+  ;:config
+  ;(evil-mode 1)
+  ;(define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  ;(define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
-  ;; Use visual line motions even outside of visual-line-mode buffers
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+  ;;; Use visual line motions even outside of visual-line-mode buffers
+  ;(evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  ;(evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
+  ;(evil-set-initial-state 'messages-buffer-mode 'normal)
+  ;(evil-set-initial-state 'dashboard-mode 'normal))
 
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
+;(use-package evil-collection
+  ;:after evil
+  ;:config
+  ;(evil-collection-init))
 
-(evil-set-undo-system 'undo-redo)
+;(evil-set-undo-system 'undo-redo)
 
 (use-package neotree
   :ensure t
   :config
   (global-set-key (kbd "<f9>") 'neotree-toggle))
+
+(use-package notmuch
+  :ensure t
+  :defer t)
 
 (global-set-key (kbd "C-x 2") 'ic/split-and-follow-horizontally)
 (global-set-key (kbd "C-x 3") 'ic/split-and-follow-vertically)
@@ -128,11 +157,11 @@
 ;; custom evil keybindings
 
 ;; set leader key in tutti gli stati
-(evil-set-leader nil (kbd "SPC"))
-;; tasti vari
-;(evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
-(evil-define-key 'normal 'global (kbd "<leader>b") 'list-buffers)
-(evil-define-key 'normal 'global (kbd "<leader>g") 'magit-status)
+;(evil-set-leader nil (kbd "SPC"))
+;;; tasti vari
+;;(evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
+;(evil-define-key 'normal 'global (kbd "<leader>b") 'list-buffers)
+;(evil-define-key 'normal 'global (kbd "<leader>g") 'magit-status)
 
 (use-package hydra)
 
@@ -173,6 +202,10 @@
 (use-package vterm
     :ensure t)
 
+;; associa file c con c-mode
+;;(add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
+
+
 (require 'eglot)
 (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
 (add-hook 'c-mode-hook 'eglot-ensure)
@@ -192,6 +225,48 @@
   :ensure t
   :config
   (setq imenu-list-focus-after-activation t))
+
+;; outline-indent
+(use-package outline-indent
+  :ensure t
+  :straight (outline-indent
+             :type git
+             :host github
+             :repo "jamescherti/outline-indent.el")
+  :custom
+  (outline-indent-ellipsis " ▼ "))
+
+(use-package casual-dired
+  :ensure t
+  :straight (casual-dired
+             :type git
+             :host github
+             :repo "/kickingvegas/casual-dired")
+  :bind (:map dired-mode-map
+              ("C-t" . #'casual-dired-tmenu)
+              ("s" . #'casual-dired-sort-by-tmenu)
+              ("/" . #'casual-dired-search-replace-tmenu)))
+
+(use-package pdf-tools
+   :ensure t
+   :pin manual
+   :mode  ("\\.pdf\\'" . pdf-view-mode)
+   :config
+   (setq-default pdf-view-display-size 'fit-width)
+   (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+   (setq pdf-annot-activate-created-annotations t "automatically annotate highlights")
+   (pdf-tools-install :no-query)
+   (require 'pdf-occur))
+
+(use-package tab-line
+  :ensure t
+  :bind
+  (("C-<iso-lefttab>" . tab-line-switch-to-prev-tab)
+   ("C-<tab>" . tab-line-switch-to-next-tab)))
+
+
+(add-hook 'python-mode-hook #'outline-indent-minor-mode)
+(add-hook 'python-ts-mode-hook #'outline-indent-minor-mode)
 
 ;; vterm toggle
 (global-set-key [f2] 'vterm-toggle)
@@ -259,6 +334,23 @@
   (persp-state-load "~/persp/lavoro.save"))
 
 (global-set-key (kbd "C-c l") #'switch-lavoro-persp)
+
+(require 'compile)
+ (add-hook 'c-mode-hook
+           (lambda ()
+	     (unless (file-exists-p "Makefile")
+	       (set (make-local-variable 'compile-command)
+                    ;; emulate make's .c.o implicit pattern rule, but with
+                    ;; different defaults for the CC, CPPFLAGS, and CFLAGS
+                    ;; variables:
+                    ;; $(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
+		    (let ((file (file-name-nondirectory buffer-file-name)))
+                      (format "%s -c -o %s.o %s %s %s"
+                              (or (getenv "CC") "gcc")
+                              (file-name-sans-extension file)
+                              (or (getenv "CPPFLAGS") "-DDEBUG=9")
+                              (or (getenv "CFLAGS") "-pedantic -Wall -g")
+			      file))))))
 
 ; config org mode per eseguire codice
 (org-babel-do-load-languages
