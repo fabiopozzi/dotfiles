@@ -264,6 +264,38 @@
   (("C-<iso-lefttab>" . tab-line-switch-to-prev-tab)
    ("C-<tab>" . tab-line-switch-to-next-tab)))
 
+; tab line customization
+(require 'powerline)
+(defvar my/tab-height 22)
+(defvar my/tab-left (powerline-bar-right 'tab-line nil my/tab-height))
+(defvar my/tab-right (powerline-bar-left nil 'tab-line my/tab-height))
+
+(defun my/tab-line-tab-name-buffer (buffer &optional _buffers)
+  (powerline-render (list my/tab-left
+                          (format " %s  " (buffer-name buffer))
+                          my/tab-right)))
+(setq tab-line-tab-name-function #'my/tab-line-tab-name-buffer)
+(setq tab-line-new-button-show nil)
+(setq tab-line-close-button-show nil)
+
+(set-face-attribute 'tab-line nil ;; background behind tabs
+      :background "gray40"
+      :foreground "gray60" :distant-foreground "gray50"
+      :family "Fira Sans Condensed" :height 1.0 :box nil)
+(set-face-attribute 'tab-line-tab nil ;; active tab in another window
+      :inherit 'tab-line
+      :foreground "gray70" :background "gray90" :box nil)
+(set-face-attribute 'tab-line-tab-current nil ;; active tab in current window
+      :background "#008081" :foreground "white" :box nil)
+(set-face-attribute 'tab-line-tab-inactive nil ;; inactive tab
+      :background "gray80" :foreground "black" :box nil)
+(set-face-attribute 'tab-line-highlight nil ;; mouseover
+      :background "white" :foreground 'unspecified)
+(set-face-attribute 'tab-line-tab-modified nil ;; tab con modifiche
+      :background "#008081" :foreground "red" :weight 'bold)
+
+
+
 
 (add-hook 'python-mode-hook #'outline-indent-minor-mode)
 (add-hook 'python-ts-mode-hook #'outline-indent-minor-mode)
@@ -334,6 +366,18 @@
   (persp-state-load "~/persp/lavoro.save"))
 
 (global-set-key (kbd "C-c l") #'switch-lavoro-persp)
+
+(defun copy-line (&optional arg)
+    "Do a kill-line but copy rather than kill.  This function directly calls
+kill-line, so see documentation of kill-line for how to use it including prefix
+argument and relevant variables.  This function works by temporarily making the
+buffer read-only."
+    (interactive "P")
+    (let ((buffer-read-only t)
+        (kill-read-only-ok t))
+    (kill-line arg)))
+;; optional key binding
+(global-set-key "\C-c\C-k" 'copy-line)
 
 (require 'compile)
  (add-hook 'c-mode-hook
