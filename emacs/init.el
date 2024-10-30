@@ -193,16 +193,9 @@
   :custom
   (outline-indent-ellipsis " ▼ "))
 
-(use-package casual-dired
+(use-package casual
   :ensure t
-  :straight (casual-dired
-             :type git
-             :host github
-             :repo "/kickingvegas/casual-dired")
-  :bind (:map dired-mode-map
-              ("C-t" . #'casual-dired-tmenu)
-              ("s" . #'casual-dired-sort-by-tmenu)
-              ("/" . #'casual-dired-search-replace-tmenu)))
+  )
 
 (use-package pdf-tools
    :ensure t
