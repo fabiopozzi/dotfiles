@@ -92,8 +92,7 @@
 (use-package all-the-icons)
 
 (use-package htmlize
-  :custom (org-html-htmlize-output-type 'css)
-  )
+  :custom (org-html-htmlize-output-type 'css))
 
 (use-package moody
   :config
@@ -153,8 +152,12 @@
 (use-package vterm
     :ensure t)
 
-;; associa file c con c-mode
-;;(add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
+(use-package web-mode
+  :ensure t
+  :mode
+  (("\\.php\\'" . web-mode)
+   ("\\.erb\\'" . web-mode)
+   ("\\.html\\'" . web-mode)))
 
 
 (require 'eglot)
