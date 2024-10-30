@@ -73,18 +73,11 @@
 ;; Display line numbers in every buffer
 (global-display-line-numbers-mode 1)
 
-;; indentation settings
-(setq-default indent-tabs-mode nil)
-(setq tab-width 4) ; tabs larghi 4
-(setq c-default-style "k&r"
-	c-basic-offset 4)
-
 ;; (use-package command-log-mode)
 (use-package markdown-mode
   :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "pandoc"))
-
 
 (use-package dumb-jump
   :ensure t
