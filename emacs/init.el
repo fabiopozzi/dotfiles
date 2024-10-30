@@ -159,8 +159,11 @@
    ("\\.erb\\'" . web-mode)
    ("\\.html\\'" . web-mode)))
 
+(use-package eglot
+  :ensure t
+  :custom
+  (eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider)))
 
-(require 'eglot)
 (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
 (add-hook 'c-mode-hook 'eglot-ensure)
 (add-hook 'c++-mode-hook 'eglot-ensure)
@@ -168,12 +171,12 @@
 ;; hideshow
 (add-hook 'python-mode-hook     'hs-minor-mode)
 
-(use-package treesit-auto
-  :custom
-  (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
+;(use-package treesit-auto
+  ;:custom
+  ;(treesit-auto-install 'prompt)
+  ;:config
+  ;(treesit-auto-add-to-auto-mode-alist 'all)
+  ;(global-treesit-auto-mode))
 
 (use-package imenu-list
   :ensure t
@@ -236,23 +239,54 @@
       :background "gray40"
       :foreground "gray60" :distant-foreground "gray50"
       :family "Fira Sans Condensed" :height 1.0 :box nil)
-(set-face-attribute 'tab-line-tab nil ;; active tab in another window
-      :inherit 'tab-line
-      :foreground "gray70" :background "gray90" :box nil)
-(set-face-attribute 'tab-line-tab-current nil ;; active tab in current window
-      :background "#008081" :foreground "white" :box nil)
-(set-face-attribute 'tab-line-tab-inactive nil ;; inactive tab
-      :background "gray80" :foreground "black" :box nil)
-(set-face-attribute 'tab-line-highlight nil ;; mouseover
-      :background "white" :foreground 'unspecified)
+;; (set-face-attribute 'tab-line-tab nil ;; active tab in another window
+;;       :inherit 'tab-line
+;;       :foreground "gray70" :background "gray90" :box nil)
+;; (set-face-attribute 'tab-line-tab-current nil ;; active tab in current window
+;;       :background "#008081" :foreground "white" :box nil)
+;; (set-face-attribute 'tab-line-tab-inactive nil ;; inactive tab
+;;       :background "gray80" :foreground "black" :box nil)
+;; (set-face-attribute 'tab-line-highlight nil ;; mouseover
+;;       :background "white" :foreground 'unspecified)
 (set-face-attribute 'tab-line-tab-modified nil ;; tab con modifiche
-      :background "#008081" :foreground "red" :weight 'bold)
-
-
+         :foreground "red" :weight 'normal)
 
 
 (add-hook 'python-mode-hook #'outline-indent-minor-mode)
 (add-hook 'python-ts-mode-hook #'outline-indent-minor-mode)
+
+(defun my-c-mode-common-hook ()
+ ;; my customizations for all of c-mode, c++-mode, objc-mode, java-mode
+  (setq c-basic-offset 4
+        c-indent-level 4
+        c-default-style "stroustrup")
+  (setq indent-tabs-mode t)
+  )
+
+(use-package c-ts-mode
+ :if (treesit-language-available-p 'c)
+ :custom
+ (c-ts-mode-indent-offset 4)
+ (c-ts-mode-indent-style "stroustrup")
+ :init
+ ;; Remap the standard C/C++ modes
+ (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+ (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+ (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode)))
+
+ ;(c-set-offset 'substatement-open 0)
+ ;;; other customizations can go here
+
+ ;(setq c++-tab-always-indent t)
+ ;(setq c-basic-offset 4)                  ;; Default is 2
+ ;(setq c-indent-level 4)                  ;; Default is 2
+
+ ;(setq tab-stop-list '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60))
+ ;(setq tab-width 4)
+ ;(setq indent-tabs-mode t)  ; use spaces only if nil
+ ;)
+
+(add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
 ;; vterm toggle
 (global-set-key [f2] 'vterm-toggle)
