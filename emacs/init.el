@@ -33,7 +33,7 @@
 
 ;; setup exec-path per usare ag
 (setq exec-path (append exec-path '("/usr/bin")))
-
+(setq-default c-tab-always-indent 'complete)
 ;; Initialize package sources
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -161,22 +161,22 @@
 
 (use-package eglot
   :ensure t
-  :custom
-  (eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider)))
+  :defer t
+  :hook ((c-ts-mode . eglot-ensure)
+         (c-ts-mode . hs-minor-mode))
+  :config
+        (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+  ;;:custom
+  (eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider))
+  )
 
-(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-(add-hook 'c-mode-hook 'eglot-ensure)
-(add-hook 'c++-mode-hook 'eglot-ensure)
+;; TODO: fare stessa cosa per cpp-mode
+;;(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+;;(add-hook 'c-mode-hook 'eglot-ensure)
+;;(add-hook 'c++-mode-hook 'eglot-ensure)
 
 ;; hideshow
 (add-hook 'python-mode-hook     'hs-minor-mode)
-
-;(use-package treesit-auto
-  ;:custom
-  ;(treesit-auto-install 'prompt)
-  ;:config
-  ;(treesit-auto-add-to-auto-mode-alist 'all)
-  ;(global-treesit-auto-mode))
 
 (use-package imenu-list
   :ensure t
@@ -248,25 +248,28 @@
 (add-hook 'python-mode-hook #'outline-indent-minor-mode)
 (add-hook 'python-ts-mode-hook #'outline-indent-minor-mode)
 
-(defun my-c-mode-common-hook ()
- ;; my customizations for all of c-mode, c++-mode, objc-mode, java-mode
-  (setq c-basic-offset 4
-        c-indent-level 4
-        c-default-style "stroustrup")
-  (setq indent-tabs-mode t)
-  )
 
 (use-package c-ts-mode
  :if (treesit-language-available-p 'c)
- :custom
- (c-ts-mode-indent-offset 4)
- (c-ts-mode-indent-style "stroustrup")
  :init
- ;; Remap the standard C/C++ modes
- (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
- (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
- (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode)))
+    (add-to-list 'auto-mode-alist '("\\.c\\'" . c-ts-mode))
+ :config
+    (add-hook 'c-ts-mode-hook #'hs-minor-mode)
+    (add-hook 'c-ts-mode-hook
+          (lambda nil
+            (setq indent-tabs-mode t)
+            (setq c-ts-mode-indent-offset 4)
+            (setq c-ts-mode-indent-style "stroustrup")
+            (setq tab-width 4)))
+  :bind
+    ("C-+" . 'hs-show-all)
+    ("C-_" . 'hs-hide-all)
+    ("C-=" . 'hs-show-block)
+    ("C--" . 'hs-hide-block)
+ )
 
+;;(add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+;;(add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
  ;(c-set-offset 'substatement-open 0)
  ;;; other customizations can go here
 
@@ -278,8 +281,8 @@
  ;(setq tab-width 4)
  ;(setq indent-tabs-mode t)  ; use spaces only if nil
  ;)
-
-(add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+(use-package racket-mode
+  :ensure t)
 
 ;; vterm toggle
 (global-set-key [f2] 'vterm-toggle)
@@ -360,10 +363,10 @@ buffer read-only."
 ;; optional key binding
 (global-set-key "\C-c\C-k" 'copy-line)
 
+;; da sistemare, da integrare in use-package
 (require 'compile)
- (add-hook 'c-mode-hook
+ (add-hook 'c-ts-mode-hook
            (lambda ()
-	     (unless (file-exists-p "Makefile")
 	       (set (make-local-variable 'compile-command)
                     ;; emulate make's .c.o implicit pattern rule, but with
                     ;; different defaults for the CC, CPPFLAGS, and CFLAGS
@@ -375,12 +378,15 @@ buffer read-only."
                               (file-name-sans-extension file)
                               (or (getenv "CPPFLAGS") "-DDEBUG=9")
                               (or (getenv "CFLAGS") "-pedantic -Wall -g")
-			      file))))))
+			      file)))))
 
 ; config org mode per eseguire codice
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((python . t)))
+
+; M-Return to get a new list item
+(setq org-M-RET-may-split-line '((item . nil)))
 
 (custom-set-variables
  ; custom-set-variables was added by Custom.
