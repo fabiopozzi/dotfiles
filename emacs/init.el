@@ -242,6 +242,16 @@
   (interactive)
   (persp-state-load "~/persp/lavoro.save"))
 
+(defun forward-or-backward-sexp (&optional arg)
+  "Go to the matching parenthesis character if one is adjacent to point."
+  (interactive "^p")
+  (cond ((looking-at "\\s(") (forward-sexp arg))
+        ((looking-back "\\s)" 1) (backward-sexp arg))
+        ;; Now, try to succeed from inside of a bracket
+        ((looking-at "\\s)") (forward-char) (backward-sexp arg))
+        ((looking-back "\\s(" 1) (backward-char) (forward-sexp arg))))
+
 ;; keybindings
 (global-set-key (kbd "C-c l") #'switch-lavoro-persp)
 (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
+(global-set-key (kbd "C-%") #'forward-or-backward-sexp)
