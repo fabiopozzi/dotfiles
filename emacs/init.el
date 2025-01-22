@@ -249,6 +249,7 @@
 (setq tab-line-close-button-show nil)
 
 
+(setq-default c-tab-always-indent 'complete)
 (setq c-basic-offset 4)
 (setq c-mode-indent-offset 4)
 (setq tab-width 4)
@@ -263,20 +264,20 @@
         (setq c-mode-indent-offset 4)
         (setq tab-width 4)
        ))
-   (add-hook 'c-mode-common-hook
-             (lambda ()
-               (set (make-local-variable 'compile-command)
-                    ;; emulate make's .c.o implicit pattern rule, but with
-                    ;; different defaults for the CC, CPPFLAGS, and CFLAGS
-                    ;; variables:
-                    ;; $(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
-                    (let ((file (file-name-nondirectory buffer-file-name)))
-                      (format "%s -o %s %s %s %s"
-                              (or (getenv "CC") "gcc")
-                              (file-name-sans-extension file)
-                              (or (getenv "CPPFLAGS") "-DDEBUG=9")
-                              (or (getenv "CFLAGS") "-pedantic -Wall -g")
-                              file)))))
+   ;; (add-hook 'c-mode-common-hook
+   ;;           (lambda ()
+   ;;             (set (make-local-variable 'compile-command)
+   ;;                  ;; emulate make's .c.o implicit pattern rule, but with
+   ;;                  ;; different defaults for the CC, CPPFLAGS, and CFLAGS
+   ;;                  ;; variables:
+   ;;                  ;; $(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
+   ;;                  (let ((file (file-name-nondirectory buffer-file-name)))
+   ;;                    (format "%s -o %s %s %s %s"
+   ;;                            (or (getenv "CC") "gcc")
+   ;;                            (file-name-sans-extension file)
+   ;;                            (or (getenv "CPPFLAGS") "-DDEBUG=9")
+   ;;                            (or (getenv "CFLAGS") "-pedantic -Wall -g")
+   ;;                            file)))))
   :bind
     ("C-+" . 'hs-show-all)
     ("C-_" . 'hs-hide-all)
