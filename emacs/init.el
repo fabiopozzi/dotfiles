@@ -88,6 +88,11 @@
   :ensure t
   )
 
+(use-package chatgpt-shell
+  :ensure t)
+(setq chatgpt-shell-anthropic-key "la-mia-chiave-segreta")
+(setq chatgpt-shell-model-version "claude-3-5-sonnet-20241022")
+
 (use-package counsel
   :ensure t
   :config
