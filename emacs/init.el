@@ -214,11 +214,22 @@
 (use-package emacs
   :config
   (load-theme 'solarized-dark)
+  :custom
+  ;; TAB cycle if there are only few candidates
+  (completion-cycle-threshold 3)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  (tab-always-indent 'complete)
+
+  ;; Emacs 30 and newer: Disable Ispell completion function.
+  ;; Try `cape-dict' as an alternative.
+  (text-mode-ispell-word-completion nil)
 )
 
 ;; Font Fira code
-(defvar dimensione-font-default 140)
-(set-face-attribute 'default nil :font "Fira Code Retina" :height dimensione-font-default)
+(defvar dimensione-font-default 180)
+(set-face-attribute 'default nil :font "Inconsolata" :height dimensione-font-default)
 
 ;; hideshow
 (add-hook 'python-mode-hook     'hs-minor-mode)
