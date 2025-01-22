@@ -109,6 +109,9 @@
         (add-to-list 'eglot-server-programs '(c-mode "clangd"))
   )
 
+(use-package htmlize
+  :custom (org-html-htmlize-output-type 'css))
+
 (use-package imenu-list
   :ensure t
   :config
