@@ -307,4 +307,5 @@
 ;; keybindings
 (global-set-key (kbd "C-c l") #'switch-lavoro-persp)
 (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
-(global-set-key (kbd "C-%") #'forward-or-backward-sexp)
+(global-set-key (kbd "C-5") #'forward-or-backward-sexp)
+(global-set-key (kbd "s-/") 'completion-at-point)
