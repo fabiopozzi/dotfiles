@@ -3,7 +3,7 @@
 
 ;; Use UTF-8 everywhere
 (set-language-environment    "UTF-8")
-(setq locale-coding-system   'utf-8)
+(setopt locale-coding-system   'utf-8)
 (prefer-coding-system        'utf-8)
 (set-default-coding-systems  'utf-8)
 (set-terminal-coding-system  'utf-8)
@@ -51,12 +51,11 @@
 (setq-default show-trailing-whitespace t)
 
 (global-tab-line-mode t) ; a tab for each buffer
+(setq  tab-line-exclude-modes nil)
 (column-number-mode)
 ;; Display line numbers in every buffer
 (global-display-line-numbers-mode 1)
 
-;; show trailing whitespace
-;;(setq-default show-trailing-whitespace t)
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -107,6 +106,7 @@
          (c-mode . hs-minor-mode))
   :config
         (add-to-list 'eglot-server-programs '(c-mode "clangd"))
+        (add-to-list 'eglot-server-programs '(web-mode "vls"))
   )
 
 (use-package htmlize
@@ -120,6 +120,9 @@
 (use-package indent-bars
   :ensure t
   :hook ((python-mode yaml-mode) . indent-bars-mode)) ; or whichever modes you prefer
+
+(use-package org-cliplink
+  :ensure t)
 
 (use-package markdown-mode
   :ensure t
@@ -137,9 +140,6 @@
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode))
 
-(use-package notmuch
-  :ensure t
-  :defer t)
 
 (use-package perspective
   :bind
@@ -178,6 +178,20 @@
 (use-package solarized-theme
   :config (load-theme 'solarized-dark t))
 
+;; minibuffer completion
+(use-package vertico
+  :custom
+  (vertico-count 5)                    ; Number of candidates to display
+  (vertico-resize t)
+  (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
+  :config
+  (keymap-set vertico-map "RET" #'vertico-directory-enter)
+  (keymap-set vertico-map "DEL" #'vertico-directory-delete-char)
+  (keymap-set vertico-map "M-DEL" #'vertico-directory-delete-word)
+  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
+  (vertico-mode)
+  (vertico-flat-mode))
+
 ;; completion using corfu (da configurare)
 (use-package corfu
   ;; Optional customizations
@@ -206,6 +220,7 @@
   :bind (("M-/" . dabbrev-completion)
          ("C-M-/" . dabbrev-expand))
   :config
+  (setq dabbrev-case-fold-search nil dabbrev-case-replace nil)
   (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
   ;; Since 29.1, use `dabbrev-ignored-buffer-regexps' on older.
   (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
@@ -227,27 +242,18 @@
   (text-mode-ispell-word-completion nil)
 )
 
-;; Font Fira code
-(defvar dimensione-font-default 180)
+(use-package vue-mode
+    :ensure t)
+
+(add-hook 'mmm-mode-hook
+          (lambda ()
+            (set-face-background 'mmm-default-submode-face nil)))
+
+(defvar dimensione-font-default 160)
 (set-face-attribute 'default nil :font "Inconsolata" :height dimensione-font-default)
 
 ;; hideshow
 (add-hook 'python-mode-hook     'hs-minor-mode)
-
-; tab line customization
-(require 'powerline)
-(defvar my/tab-height 22)
-(defvar my/tab-left (powerline-bar-right 'tab-line nil my/tab-height))
-(defvar my/tab-right (powerline-bar-left nil 'tab-line my/tab-height))
-
-(defun my/tab-line-tab-name-buffer (buffer &optional _buffers)
-  (powerline-render (list my/tab-left
-                          (format " %s  " (buffer-name buffer))
-                          my/tab-right)))
-(setq tab-line-tab-name-function #'my/tab-line-tab-name-buffer)
-(setq tab-line-new-button-show nil)
-(setq tab-line-close-button-show nil)
-
 
 (setq-default c-tab-always-indent 'complete)
 (setq c-basic-offset 4)
@@ -264,20 +270,6 @@
         (setq c-mode-indent-offset 4)
         (setq tab-width 4)
        ))
-   ;; (add-hook 'c-mode-common-hook
-   ;;           (lambda ()
-   ;;             (set (make-local-variable 'compile-command)
-   ;;                  ;; emulate make's .c.o implicit pattern rule, but with
-   ;;                  ;; different defaults for the CC, CPPFLAGS, and CFLAGS
-   ;;                  ;; variables:
-   ;;                  ;; $(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
-   ;;                  (let ((file (file-name-nondirectory buffer-file-name)))
-   ;;                    (format "%s -o %s %s %s %s"
-   ;;                            (or (getenv "CC") "gcc")
-   ;;                            (file-name-sans-extension file)
-   ;;                            (or (getenv "CPPFLAGS") "-DDEBUG=9")
-   ;;                            (or (getenv "CFLAGS") "-pedantic -Wall -g")
-   ;;                            file)))))
   :bind
     ("C-+" . 'hs-show-all)
     ("C-_" . 'hs-hide-all)
@@ -285,15 +277,80 @@
     ("C--" . 'hs-hide-block)
   )
 
+(defun compile-with-gcc ()
+  "Compile current buffer file with gcc."
+  (interactive)
+  (let ((filename (buffer-file-name))
+        (compile-command nil))
+    (if filename
+        (if (string-match "\\.c$" filename)
+            (progn
+              (setq compile-command
+                    (concat "gcc -Wall -o "
+                            (file-name-sans-extension filename)
+                            " "
+                            filename))
+              (compile compile-command))
+          (message "Not a C file!"))
+      (message "Buffer is not visiting a file!"))))
+
+;; Bind the function to a key (optional)
+(global-set-key (kbd "C-c C-g") 'compile-with-gcc)
+
+(defun run-in-vterm ()
+  "Run the binary corresponding to the current C file in vterm."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (if filename
+        (if (string-match "\\.c$" filename)
+            (let ((binary-name (file-name-sans-extension filename)))
+              (if (file-exists-p binary-name)
+                  (progn
+                    ;; Ensure vterm is loaded
+                    (require 'vterm)
+                    ;; Create new vterm if none exists
+                    (unless (get-buffer "*vterm*")
+                      (vterm))
+                    ;; Switch to vterm buffer
+                    (switch-to-buffer "*vterm*")
+                    ;; Send the command to execute the binary
+                    (vterm-send-string (concat "./"
+                                             (file-name-nondirectory binary-name)))
+                    (vterm-send-return))
+                (message "Binary not found! Compile the file first.")))
+          (message "Not a C file!"))
+      (message "Buffer is not visiting a file!"))))
+
+;; Bind the function to a key (optional)
+(global-set-key (kbd "C-c C-r") 'run-in-vterm)
+
+;(defun compile-and-run ()
+;  "Compile the current C file and run it in vterm if compilation succeeds."
+;  (interactive)
+;  (let ((compilation-buffer (compile-with-gcc)))
+;    (set-process-sentinel 
+;     (get-buffer-process compilation-buffer)
+;     (lambda (process event)
+;       (when (string-match "finished" event)
+;         (run-in-vterm))))))
+;
+;; Bind the combined function to a key
+;(global-set-key (kbd "C-c C-b") 'compile-and-run)
+
+(setq org-todo-keywords
+      '((sequence "TODO" "WIP" "ATTESA" "|" "DONE" "FATTO" "DELEGATO")))
+
 (defun switch-scuola-persp ()
   (interactive)
   (persp-state-load "~/persp/scuola.save"))
 
-(global-set-key (kbd "C-c s") #'switch-scuola-persp)
-
 (defun switch-lavoro-persp ()
   (interactive)
   (persp-state-load "~/persp/lavoro.save"))
+
+(defun switch-tecno-persp ()
+  (interactive)
+  (persp-state-load "~/persp/tecnomedica.save"))
 
 (defun forward-or-backward-sexp (&optional arg)
   "Go to the matching parenthesis character if one is adjacent to point."
@@ -304,8 +361,106 @@
         ((looking-at "\\s)") (forward-char) (backward-sexp arg))
         ((looking-back "\\s(" 1) (backward-char) (forward-sexp arg))))
 
+(defun create-frame-with-new-perspective ()
+  "Create a new frame and switch to a new perspective in it."
+  (interactive)
+  ;; Crea un nuovo frame
+  (let ((new-frame (make-frame)))
+    ;; Seleziona il nuovo frame
+    (select-frame new-frame)
+    ;; Crea una nuova prospettiva
+    (let ((persp-name (read-string "Enter perspective name: ")))
+      (persp-switch persp-name))
+    ;; Opzionalmente, puoi aggiungere qui altre personalizzazioni del frame
+    (message "Created new frame with perspective: %s"
+             (persp-current-name))))
+
+;; Binding della funzione a una combinazione di tasti (opzionale)
+(global-set-key (kbd "C-c n") 'create-frame-with-new-perspective)
+
 ;; keybindings
+(global-set-key (kbd "C-c s") #'switch-scuola-persp)
 (global-set-key (kbd "C-c l") #'switch-lavoro-persp)
+(global-set-key (kbd "C-c t") #'switch-tecno-persp)
 (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
 (global-set-key (kbd "C-5") #'forward-or-backward-sexp)
 (global-set-key (kbd "s-/") 'completion-at-point)
+(global-set-key (kbd "<f2>") 'org-clock-in)
+(global-set-key (kbd "<f3>") 'org-clock-out)
+(global-set-key (kbd "C-x p i") 'org-cliplink)
+
+;; dired
+(setq dired-dwim-target t)  ; suggest other visible dired buffer
+
+(setq org-capture-templates
+   '(("K" "Cliplink capture task" entry (file+headline "~/Nextcloud/org/bookmarks.org" "Bookmarks")
+      "* %(org-cliplink-capture) \n  DATA: %t\n" :empty-lines 1)))
+
+;; Scorciatoia per attivare org-capture
+(global-set-key (kbd "<f9>") 'org-capture)
+
+
+;; newsticker
+(setq newsticker-url-list '(
+  ("Emacs-news" "https://sachachua.com/blog/category/emacs-news/feed/")
+))
+
+(defun my/close-newsticker ()
+    "Kill all tree-view related buffers."
+    (kill-buffer "*Newsticker List*")
+    (kill-buffer "*Newsticker Item*")
+    (kill-buffer "*Newsticker Tree*"))
+
+(advice-add 'newsticker-treeview-quit :after 'my/close-newsticker)
+
+;; solarized colors
+;; (defun set-tab-line-solarized ()
+;;   (let ((active-bg "#002b36")
+;;         (active-fg "#93a1a1")
+;;         (inactive-bg "#073642")
+;;         (inactive-fg "#586e75")
+;;         (separator-color "#093642"))
+
+;; Custom function to set specific colors
+(defun set-tab-line-custom-colors ()
+  "Set custom colors for tab-line elements."
+  (let ((active-bg "#2b2b2b")
+        (active-fg "#e6e6e6")
+        (inactive-bg "#1a1a1a")
+        (inactive-fg "#808080")
+        (separator-color "#404040"))
+
+    (set-face-attribute 'tab-line nil
+                       :background inactive-bg
+                       :foreground inactive-fg
+                       :height 1.0
+                       :box `(:line-width 1 :color ,separator-color))
+
+    (set-face-attribute 'tab-line-tab nil
+                       :inherit 'tab-line
+                       :background active-bg
+                       :foreground active-fg
+                       :box `(:line-width 1 :color ,separator-color))
+
+    (set-face-attribute 'tab-line-tab-inactive nil
+                       :inherit 'tab-line
+                       :background inactive-bg
+                       :foreground inactive-fg
+                       :box `(:line-width 1 :color ,separator-color))
+
+    (set-face-attribute 'tab-line-tab-current nil
+                       :inherit 'tab-line-tab
+                       :background "#0404bf"
+                       :foreground active-fg
+                       :bold t)
+
+    (set-face-attribute 'tab-line-highlight nil
+                       :background "#505050"
+                       :foreground active-fg)))
+
+;; Call the custom function
+(set-tab-line-custom-colors)
+
+
+
+
