@@ -34,9 +34,11 @@ exec --no-startup-id xinput set-prop "ETPS/2 Elantech Touchpad" "libinput Natura
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 
+set $volumepath ~/i3-volume
+
 # audio bindings
-bindsym XF86AudioRaiseVolume exec "amixer -q sset Master,0 5+ unmute"
-bindsym XF86AudioLowerVolume exec "amixer -q sset Master,0 5- unmute"
+bindsym XF86AudioRaiseVolume exec --no-startup-id $volumepath/volume -an -t $statuscmd -u $statussig up $volumestep
+bindsym XF86AudioLowerVolume exec --no-startup-id $volumepath/volume -an -t $statuscmd -u $statussig down $volumestep
 bindsym XF86AudioMute exec "amixer -q sset Master,0 toggle"
 
 bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +10 # increase screen brightness
@@ -154,14 +156,17 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
 # lock screen
-bindsym $mod+x exec --no-startup-id i3lock -c 04090e
+bindsym $mod+x exec --no-startup-id i3lock --color 4b96e8
 
 # my custom settings
 # keyboard layout
-bindsym Ctrl+Shift+1 exec --no-startup-id setxkbmap us
-bindsym Ctrl+Shift+2 exec --no-startup-id setxkbmap it
+bindsym Ctrl+Shift+1 exec --no-startup-id setxkbmap us -option ctrl:nocaps
+bindsym Ctrl+Shift+2 exec --no-startup-id setxkbmap it -option ctrl:nocaps
 
 bindsym $mod+n exec --no-startup-id nautilus
+
+#bindsym Print exec scrot --silent --focused --pointer --exec 'mv $f ~/tmp/.
+bindsym Print exec scrot $HOME/Pictures/Screenshots/`date +%Y-%m-%d_%H:%M:%S`.png
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -192,4 +197,11 @@ bindsym $mod+r mode "resize"
 
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh --hack
 exec_always --no-startup-id $HOME/.config/i3/autostart
+exec --no-startup-id ssh-agent > ~/.ssh/agent
+
+# Turn off border for all windows (default is: normal)
+default_border none
+
+# No left, right or bottom borders, but keep title bar
+hide_edge_borders both
 
