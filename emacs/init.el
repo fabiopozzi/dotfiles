@@ -48,13 +48,28 @@
       scroll-conservatively 100000
       scroll-preserve-screen-position 1
       )
-(setq-default show-trailing-whitespace t)
+;(setq-default show-trailing-whitespace t)
 
 (global-tab-line-mode t) ; a tab for each buffer
 (setq  tab-line-exclude-modes nil)
 (column-number-mode)
 ;; Display line numbers in every buffer
 (global-display-line-numbers-mode 1)
+(setopt initial-buffer-choice #'enlight)
+
+;; custom functions
+(defun er-keyboard-quit ()
+  "Smarter version of the built-in `keyboard-quit'.
+
+The generic `keyboard-quit' does not do the expected thing when
+the minibuffer is open.  Whereas we want it to close the
+minibuffer, even without explicitly focusing it."
+  (interactive)
+  (if (active-minibuffer-window)
+      (if (minibufferp)
+          (minibuffer-keyboard-quit)
+        (abort-recursive-edit))
+    (keyboard-quit)))
 
 
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -81,6 +96,31 @@
         ("nongnu"       . 0)))
 (package-initialize)
 
+(use-package enlight
+  :config
+  (add-hook 'enlight-after-insert-hook (lambda () (display-line-numbers-mode -1)))
+  :custom
+  (enlight-content
+   (concat
+    (enlight-menu
+     '(("Org Mode"
+	    ("Org-diary-file" (find-file "~/Nextcloud/org/diary.org") "d")
+        ("Org-diary" (org-agenda-list) "a"))
+       ("Scuola"
+	    ("Org-file" (find-file "~/Nextcloud/org/scuola.org") "s")
+	    ("Codice" (dired "~/src/scuola/c_code/") "c"))
+       ("Lavoro"
+	    ("SC-frontend" (progn
+                         (cd "/home/fabio/src/web/smart_control/frontend")
+                         (persp-state-load "~/persp/frontend.save"))
+                         "f")
+	    ("SC-backend" (progn
+                        (cd "~/src/web/smart_control/backend")
+                         (persp-state-load "~/persp/lavoro.save"))
+                        "b"))
+       
+       )))))
+
 (use-package all-the-icons)
 
 (use-package casual
@@ -90,7 +130,7 @@
 (use-package chatgpt-shell
   :ensure t)
 (setq chatgpt-shell-anthropic-key "la-mia-chiave-segreta")
-(setq chatgpt-shell-model-version "claude-3-5-sonnet-20241022")
+(setq chatgpt-shell-model-version "claude-3-7-sonnet-latest")
 
 (use-package counsel
   :ensure t
@@ -140,7 +180,6 @@
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode))
 
-
 (use-package perspective
   :bind
   ("C-x C-b" . persp-list-buffers)         ; or use a nicer switcher, see below
@@ -148,6 +187,74 @@
   (persp-mode-prefix-key (kbd "C-x x"))  ; pick your own prefix key here
   :init
   (persp-mode))
+
+
+(use-package web-mode
+  :ensure t
+  :mode ("\\.html\\'" "\\.htm\\'" "\\.php\\'" "\\.vue\\'")
+  :config
+  ;; Indentazione
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-script-indent-offset 2)
+  (setq web-mode-sql-indent-offset 2)
+  
+  ;; Abilita caratteristiche utili
+  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-enable-auto-closing t)
+  (setq web-mode-enable-current-element-highlight t)
+  (setq web-mode-enable-current-column-highlight nil)
+  
+  ;; Evidenziazione avanzata
+  (setq web-mode-enable-css-colorization t)
+  (setq web-mode-enable-block-face t)
+  (setq web-mode-enable-part-face t)
+  (setq web-mode-enable-comment-interpolation t)
+  
+  ;; Miglioramenti estetici
+  (setq web-mode-enable-element-content-fontification t)
+  (setq web-mode-enable-element-tag-fontification t)
+  
+  ;; Auto-indentazione quando si preme invio
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (local-set-key (kbd "RET") 'newline-and-indent)))
+
+  ;; Espansione automatica quando si preme tab
+  (setq web-mode-enable-auto-expanding t)
+  
+  ;; Caratteristiche specifiche per CSS
+  (setq web-mode-style-padding 2)
+  (setq web-mode-enable-css-colorization t)
+  
+  ;; Configurazione per Jinja2 (importante!)
+  (setq web-mode-engines-alist
+        '(("django"    . "\\.html\\'")    ;; Usa il motore django per i file .html (Jinja2 è basato su Django)
+          ("jinja"     . "\\.jinja\\'")
+          ("jinja"     . "\\.j2\\'")
+          ("blade"     . "\\.blade\\.")
+          ("php"       . "\\.phtml\\'")))
+  
+  ;; Personalizzazione dei delimitatori Jinja2
+  (setq web-mode-jinja-control-blocks
+        (append web-mode-django-control-blocks
+                '("block" "endblock" "raw" "endraw" "filter" "endfilter"
+                  "set" "endset" "macro" "endmacro" "call" "endcall")))
+  
+  ;; Miglioramenti per i delimitatori di template
+  (setq web-mode-comment-formats
+        '(("java"       . "/*")
+          ("javascript" . "//")
+          ("php"        . "/*")
+          ("css"        . "/*")
+          ("jinja"      . "{#")))
+  
+  ;; Padding specifico per i blocchi Jinja
+  (setq web-mode-block-padding 2)
+  )
+  
+
 
 (use-package projectile
   :ensure t
@@ -169,14 +276,9 @@
 (use-package vterm
     :ensure t)
 
-(use-package web-mode
-  :ensure t
-  :mode
-  (("\\.php\\'" . web-mode)
-   ("\\.html\\'" . web-mode)))
+(use-package ef-themes)
 
-(use-package solarized-theme
-  :config (load-theme 'solarized-dark t))
+(setq ef-themes-to-toggle '(ef-cyprus ef-symbiosis))
 
 ;; minibuffer completion
 (use-package vertico
@@ -228,7 +330,7 @@
 
 (use-package emacs
   :config
-  (load-theme 'solarized-dark)
+  (load-theme 'ef-symbiosis)
   :custom
   ;; TAB cycle if there are only few candidates
   (completion-cycle-threshold 3)
@@ -241,13 +343,6 @@
   ;; Try `cape-dict' as an alternative.
   (text-mode-ispell-word-completion nil)
 )
-
-(use-package vue-mode
-    :ensure t)
-
-(add-hook 'mmm-mode-hook
-          (lambda ()
-            (set-face-background 'mmm-default-submode-face nil)))
 
 (defvar dimensione-font-default 160)
 (set-face-attribute 'default nil :font "Inconsolata" :height dimensione-font-default)
@@ -375,9 +470,16 @@
     (message "Created new frame with perspective: %s"
              (persp-current-name))))
 
+(defun goto-codice-scuola-dir ()
+  "Passa alla directory degli esempi di codice per scuola."
+  (interactive)
+  (cd "~/src/scuola/c_code")
+  (dired "~/src/scuola/c_code"))
+
+
 ;; Binding della funzione a una combinazione di tasti (opzionale)
 (global-set-key (kbd "C-c n") 'create-frame-with-new-perspective)
-
+(global-set-key (kbd "C-c c") 'goto-codice-scuola-dir)
 ;; keybindings
 (global-set-key (kbd "C-c s") #'switch-scuola-persp)
 (global-set-key (kbd "C-c l") #'switch-lavoro-persp)
@@ -389,77 +491,100 @@
 (global-set-key (kbd "<f3>") 'org-clock-out)
 (global-set-key (kbd "C-x p i") 'org-cliplink)
 
+(global-set-key [remap keyboard-quit] #'er-keyboard-quit)
+
+
 ;; dired
 (setq dired-dwim-target t)  ; suggest other visible dired buffer
 
+
 (setq org-capture-templates
-   '(("K" "Cliplink capture task" entry (file+headline "~/Nextcloud/org/bookmarks.org" "Bookmarks")
+   '(("c" "Cliplink capture task" entry (file+headline "~/Nextcloud/org/bookmarks.org" "Bookmarks")
       "* %(org-cliplink-capture) \n  DATA: %t\n" :empty-lines 1)))
 
 ;; Scorciatoia per attivare org-capture
 (global-set-key (kbd "<f9>") 'org-capture)
 
+(use-package elfeed
+  :defer t
+  :ensure t
+  :commands (elfeed))
 
-;; newsticker
-(setq newsticker-url-list '(
-  ("Emacs-news" "https://sachachua.com/blog/category/emacs-news/feed/")
-))
+(setq elfeed-feeds
+      '(
+        ("https://sachachua.com/blog/category/emacs-news/feed/" emacs)
+        ("https://terminaltrove.com/blog.xml" unix)
+        ("https://irreal.org/blog/?feed=rss2" emacs)
+        ("https://www.djangoproject.com/rss/community/blogs/" django)
+        ("https://blog.jim-nielsen.com/feed.xml" personal-blog)
+        ("https://michael.stapelberg.ch/feed.xml" personal-blog)
+        ("https://protesilaos.com/master.xml" personal-blog)
+        ("https://fabiensanglard.net/rss.xml" personal-blog)
+        )
+      )
 
-(defun my/close-newsticker ()
-    "Kill all tree-view related buffers."
-    (kill-buffer "*Newsticker List*")
-    (kill-buffer "*Newsticker Item*")
-    (kill-buffer "*Newsticker Tree*"))
+;; Personalizzazione colori base di Elfeed
+(defface elfeed-custom-unread
+  '((t :foreground "#98be65" :weight bold))
+  "Face per articoli non letti")
 
-(advice-add 'newsticker-treeview-quit :after 'my/close-newsticker)
+(defface elfeed-custom-read
+  '((t :foreground "#5B6268"))
+  "Face per articoli letti")
 
-;; solarized colors
-;; (defun set-tab-line-solarized ()
-;;   (let ((active-bg "#002b36")
-;;         (active-fg "#93a1a1")
-;;         (inactive-bg "#073642")
-;;         (inactive-fg "#586e75")
-;;         (separator-color "#093642"))
+(defface elfeed-custom-important
+  '((t :foreground "#ff6c6b" :weight bold))
+  "Face per articoli importanti")
 
-;; Custom function to set specific colors
-(defun set-tab-line-custom-colors ()
-  "Set custom colors for tab-line elements."
-  (let ((active-bg "#2b2b2b")
-        (active-fg "#e6e6e6")
-        (inactive-bg "#1a1a1a")
-        (inactive-fg "#808080")
-        (separator-color "#404040"))
+;; Applicazione delle faces personalizzate
+(setq elfeed-search-face-alist
+      '((unread elfeed-custom-unread)
+        (read elfeed-custom-read)
+        (important elfeed-custom-important)))
 
-    (set-face-attribute 'tab-line nil
-                       :background inactive-bg
-                       :foreground inactive-fg
-                       :height 1.0
-                       :box `(:line-width 1 :color ,separator-color))
+(defun elfeed-search-format-date (date)
+  (format-time-string "%d-%m-%Y" (seconds-to-time date)))
 
-    (set-face-attribute 'tab-line-tab nil
-                       :inherit 'tab-line
-                       :background active-bg
-                       :foreground active-fg
-                       :box `(:line-width 1 :color ,separator-color))
 
-    (set-face-attribute 'tab-line-tab-inactive nil
-                       :inherit 'tab-line
-                       :background inactive-bg
-                       :foreground inactive-fg
-                       :box `(:line-width 1 :color ,separator-color))
+;; ;; Custom function to set specific colors
+;; (defun set-tab-line-custom-colors ()
+;;   "Set custom colors for tab-line elements."
+;;   (let ((active-bg "#2b2b2b")
+;;         (active-fg "#e6e6e6")
+;;         (inactive-bg "#1a1a1a")
+;;         (inactive-fg "#808080")
+;;         (separator-color "#404040"))
 
-    (set-face-attribute 'tab-line-tab-current nil
-                       :inherit 'tab-line-tab
-                       :background "#0404bf"
-                       :foreground active-fg
-                       :bold t)
+;;     (set-face-attribute 'tab-line nil
+;;                        :background inactive-bg
+;;                        :foreground inactive-fg
+;;                        :height 1.0
+;;                        :box `(:line-width 1 :color ,separator-color))
 
-    (set-face-attribute 'tab-line-highlight nil
-                       :background "#505050"
-                       :foreground active-fg)))
+;;     (set-face-attribute 'tab-line-tab nil
+;;                        :inherit 'tab-line
+;;                        :background active-bg
+;;                        :foreground active-fg
+;;                        :box `(:line-width 1 :color ,separator-color))
 
-;; Call the custom function
-(set-tab-line-custom-colors)
+;;     (set-face-attribute 'tab-line-tab-inactive nil
+;;                        :inherit 'tab-line
+;;                        :background inactive-bg
+;;                        :foreground inactive-fg
+;;                        :box `(:line-width 1 :color ,separator-color))
+
+;;     (set-face-attribute 'tab-line-tab-current nil
+;;                        :inherit 'tab-line-tab
+;;                        :background "#0404bf"
+;;                        :foreground active-fg
+;;                        :bold t)
+
+;;     (set-face-attribute 'tab-line-highlight nil
+;;                        :background "#505050"
+;;                        :foreground active-fg)))
+
+;; ;; Call the custom function
+;; (set-tab-line-custom-colors)
 
 
 
