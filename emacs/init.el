@@ -1,3 +1,4 @@
+(push '(fullscreen . maximized) default-frame-alist)
 (setq user-emacs-directory "~/.config/emacs/")
 (setq default-directory "~/")
 
@@ -14,7 +15,7 @@
 
 ;; Store customize settings in their own file
 (setq custom-file (concat user-emacs-directory "custom.el"))
-(load custom-file)
+(load custom-file 'noerror)
 
 ;; Put backup files somewhere else
 (setq backup-directory-alist
@@ -27,9 +28,6 @@
 ;; Spaces, not tabs
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
-(setq-default c-basic-offset 4)
-(setq c-default-style "k&r"
-      c-basic-offset 4)
 
 ;; Visual settings
 (menu-bar-mode -1)
@@ -118,7 +116,7 @@ minibuffer, even without explicitly focusing it."
                         (cd "~/src/web/smart_control/backend")
                          (persp-state-load "~/persp/lavoro.save"))
                         "b"))
-       
+
        )))))
 
 (use-package all-the-icons)
@@ -129,15 +127,30 @@ minibuffer, even without explicitly focusing it."
 
 (use-package chatgpt-shell
   :ensure t)
-(setq chatgpt-shell-anthropic-key "la-mia-chiave-segreta")
+(setq chatgpt-shell-anthropic-key "")
 (setq chatgpt-shell-model-version "claude-3-7-sonnet-latest")
 
-(use-package counsel
-  :ensure t
-  :config
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-count-format "(%d/%d) ")
-)
+;; OPTIONAL configuration
+(gptel-make-anthropic "Claude"
+                      :stream t
+                      :key "")
+
+(setq gptel-model   'mistral-medium-2508
+      gptel-backend
+      (gptel-make-openai "MistralLeChat"  ;Any name you want
+        :host "api.mistral.ai"
+        :endpoint "/v1/chat/completions"
+        :protocol "https"
+        :key ""
+        :models '("mistral-medium-2508")))
+
+(gptel-make-preset 'claude4coding                       ;preset name, a symbol
+  :description "A preset optimized for coding tasks" ;for your reference
+  :backend "Claude"                     ;gptel backend or backend name
+  :model 'claude-3-7-sonnet-20250219.1
+  :system "You are an expert coding assistant. Your role is to provide high-quality code solutions, refactorings, and explanations."
+  :tools '("read_buffer" "modify_buffer")) ;gptel tools or tool names
+
 
 (use-package eglot
   :ensure t
@@ -188,7 +201,6 @@ minibuffer, even without explicitly focusing it."
   :init
   (persp-mode))
 
-
 (use-package web-mode
   :ensure t
   :mode ("\\.html\\'" "\\.htm\\'" "\\.php\\'" "\\.vue\\'")
@@ -199,23 +211,23 @@ minibuffer, even without explicitly focusing it."
   (setq web-mode-code-indent-offset 2)
   (setq web-mode-script-indent-offset 2)
   (setq web-mode-sql-indent-offset 2)
-  
+
   ;; Abilita caratteristiche utili
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-enable-auto-closing t)
   (setq web-mode-enable-current-element-highlight t)
   (setq web-mode-enable-current-column-highlight nil)
-  
+
   ;; Evidenziazione avanzata
   (setq web-mode-enable-css-colorization t)
   (setq web-mode-enable-block-face t)
   (setq web-mode-enable-part-face t)
   (setq web-mode-enable-comment-interpolation t)
-  
+
   ;; Miglioramenti estetici
   (setq web-mode-enable-element-content-fontification t)
   (setq web-mode-enable-element-tag-fontification t)
-  
+
   ;; Auto-indentazione quando si preme invio
   (add-hook 'web-mode-hook
             (lambda ()
@@ -223,11 +235,11 @@ minibuffer, even without explicitly focusing it."
 
   ;; Espansione automatica quando si preme tab
   (setq web-mode-enable-auto-expanding t)
-  
+
   ;; Caratteristiche specifiche per CSS
   (setq web-mode-style-padding 2)
   (setq web-mode-enable-css-colorization t)
-  
+
   ;; Configurazione per Jinja2 (importante!)
   (setq web-mode-engines-alist
         '(("django"    . "\\.html\\'")    ;; Usa il motore django per i file .html (Jinja2 è basato su Django)
@@ -235,13 +247,13 @@ minibuffer, even without explicitly focusing it."
           ("jinja"     . "\\.j2\\'")
           ("blade"     . "\\.blade\\.")
           ("php"       . "\\.phtml\\'")))
-  
+
   ;; Personalizzazione dei delimitatori Jinja2
   (setq web-mode-jinja-control-blocks
         (append web-mode-django-control-blocks
                 '("block" "endblock" "raw" "endraw" "filter" "endfilter"
                   "set" "endset" "macro" "endmacro" "call" "endcall")))
-  
+
   ;; Miglioramenti per i delimitatori di template
   (setq web-mode-comment-formats
         '(("java"       . "/*")
@@ -249,11 +261,10 @@ minibuffer, even without explicitly focusing it."
           ("php"        . "/*")
           ("css"        . "/*")
           ("jinja"      . "{#")))
-  
+
   ;; Padding specifico per i blocchi Jinja
   (setq web-mode-block-padding 2)
   )
-  
 
 
 (use-package projectile
@@ -328,6 +339,27 @@ minibuffer, even without explicitly focusing it."
   (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
   (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode))
 
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+(use-package marginalia
+  :init (marginalia-mode))
+
+(use-package consult
+  :bind (("C-x b"   . consult-buffer)
+         ("C-x C-f" . find-file)
+         ("M-y"     . consult-yank-pop)
+         ("C-s"     . consult-line)
+         ("C-c f"   . consult-ripgrep)
+         ("C-c i"   . consult-imenu)))
+
+(use-package cape
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+
 (use-package emacs
   :config
   (load-theme 'ef-symbiosis)
@@ -345,15 +377,10 @@ minibuffer, even without explicitly focusing it."
 )
 
 (defvar dimensione-font-default 160)
-(set-face-attribute 'default nil :font "Inconsolata" :height dimensione-font-default)
+(set-face-attribute 'default nil :font "MapleMono" :height dimensione-font-default)
 
 ;; hideshow
 (add-hook 'python-mode-hook     'hs-minor-mode)
-
-(setq-default c-tab-always-indent 'complete)
-(setq c-basic-offset 4)
-(setq c-mode-indent-offset 4)
-(setq tab-width 4)
 
 (use-package cc-mode
    :config
@@ -365,11 +392,10 @@ minibuffer, even without explicitly focusing it."
         (setq c-mode-indent-offset 4)
         (setq tab-width 4)
        ))
-  :bind
-    ("C-+" . 'hs-show-all)
-    ("C-_" . 'hs-hide-all)
-    ("C-=" . 'hs-show-block)
-    ("C--" . 'hs-hide-block)
+  :bind (("C-+" . hs-show-all)
+         ("C-_" . hs-hide-all)
+         ("C-=" . hs-show-block)
+         ("C--" . hs-hide-block))
   )
 
 (defun compile-with-gcc ()
@@ -381,7 +407,7 @@ minibuffer, even without explicitly focusing it."
         (if (string-match "\\.c$" filename)
             (progn
               (setq compile-command
-                    (concat "gcc -Wall -o "
+                    (concat "gcc -Wall -g -o "
                             (file-name-sans-extension filename)
                             " "
                             filename))
@@ -476,7 +502,6 @@ minibuffer, even without explicitly focusing it."
   (cd "~/src/scuola/c_code")
   (dired "~/src/scuola/c_code"))
 
-
 ;; Binding della funzione a una combinazione di tasti (opzionale)
 (global-set-key (kbd "C-c n") 'create-frame-with-new-perspective)
 (global-set-key (kbd "C-c c") 'goto-codice-scuola-dir)
@@ -505,47 +530,29 @@ minibuffer, even without explicitly focusing it."
 ;; Scorciatoia per attivare org-capture
 (global-set-key (kbd "<f9>") 'org-capture)
 
-(use-package elfeed
-  :defer t
-  :ensure t
-  :commands (elfeed))
+(defun xah-search-current-word ()
+  "Call `isearch' on current word or selection.
+“word” here is A to Z, a to z, and hyphen [-] and lowline [_], independent of syntax table.
 
-(setq elfeed-feeds
-      '(
-        ("https://sachachua.com/blog/category/emacs-news/feed/" emacs)
-        ("https://terminaltrove.com/blog.xml" unix)
-        ("https://irreal.org/blog/?feed=rss2" emacs)
-        ("https://www.djangoproject.com/rss/community/blogs/" django)
-        ("https://blog.jim-nielsen.com/feed.xml" personal-blog)
-        ("https://michael.stapelberg.ch/feed.xml" personal-blog)
-        ("https://protesilaos.com/master.xml" personal-blog)
-        ("https://fabiensanglard.net/rss.xml" personal-blog)
-        )
-      )
+URL `http://xahlee.info/emacs/emacs/emacs_search_current_word.html'
+Created: 2010-05-29
+Version: 2025-09-15"
+  (interactive)
+  (let (xbeg xend)
+    (if (region-active-p)
+        (setq xbeg (region-beginning) xend (region-end))
+      (save-excursion
+        (skip-chars-backward "-_A-Za-z0-9")
+        (setq xbeg (point))
+        (right-char)
+        (skip-chars-forward "-_A-Za-z0-9")
+        (setq xend (point))))
+    (deactivate-mark)
+    (when (< xbeg (point)) (goto-char xbeg))
+    (isearch-mode t)
+    (isearch-yank-string (buffer-substring-no-properties xbeg xend))))
 
-;; Personalizzazione colori base di Elfeed
-(defface elfeed-custom-unread
-  '((t :foreground "#98be65" :weight bold))
-  "Face per articoli non letti")
-
-(defface elfeed-custom-read
-  '((t :foreground "#5B6268"))
-  "Face per articoli letti")
-
-(defface elfeed-custom-important
-  '((t :foreground "#ff6c6b" :weight bold))
-  "Face per articoli importanti")
-
-;; Applicazione delle faces personalizzate
-(setq elfeed-search-face-alist
-      '((unread elfeed-custom-unread)
-        (read elfeed-custom-read)
-        (important elfeed-custom-important)))
-
-(defun elfeed-search-format-date (date)
-  (format-time-string "%d-%m-%Y" (seconds-to-time date)))
-
-
+(keymap-global-set "<f8>" #'xah-search-current-word)
 ;; ;; Custom function to set specific colors
 ;; (defun set-tab-line-custom-colors ()
 ;;   "Set custom colors for tab-line elements."
@@ -589,3 +596,4 @@ minibuffer, even without explicitly focusing it."
 
 
 
+(put 'downcase-region 'disabled nil)
